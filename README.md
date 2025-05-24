@@ -22,8 +22,7 @@ You will need the following installed:
 
 Step 1: Clone the repository
 ----------------------------
-git clone https://github.com/your-username/nba-dashboard.git
-cd nba-dashboard
+git clone [https://github.com/your-username/nba-dashboard.git](https://github.com/saileshp56/CS348-Group-Project)
 
 Step 2: Create the sample database
 ----------------------------------

@@ -1,0 +1,19 @@
+.App {
+  text-align: center;
+}
+
+
+.players-table {
+  margin-left: 100px;
+  border-collapse: collapse;
+  width: 90%;
+}
+
+.players-table th, .players-table td {
+  border: 1px solid #bbbaba;
+  padding: 8px;
+}
+
+.players-table th {
+  background-color: #eeebeb;
+}

@@ -25,7 +25,7 @@ def test_sample(player_id: int):
     # load queries and set param for each
     test_queries = load_query("sql/test-sample.sql")
     params_list = [
-        {"player_id": 1, "season_id": 2022},   # R6
+        {"player_id": 1, "season_id": 2003},   # R6
         {"player_id": 1, "game_id": 1},     # R7
         {"player_id": 1, "stat": "points"},  # R8
         {}                                  # R9

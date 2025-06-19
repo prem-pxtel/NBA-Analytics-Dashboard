@@ -1,3 +1,13 @@
+-- drop tables if already exist
+DROP TABLE IF EXISTS Player
+DROP TABLE IF EXISTS Team
+DROP TABLE IF EXISTS Season
+DROP TABLE IF EXISTS Game
+DROP TABLE IF EXISTS Shot
+DROP TABLE IF EXISTS PlayerGameStats
+DROP TABLE IF EXISTS PlayerSeasonStats
+DROP TABLE IF EXISTS PlayerTeamHistory
+
 -- Player table
 CREATE TABLE Player (
     player_id INT PRIMARY KEY,

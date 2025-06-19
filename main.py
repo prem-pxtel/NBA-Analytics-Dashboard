@@ -25,7 +25,7 @@ def test_sample(player_id: int):
     # load queries and set param for each
     test_queries = load_query("sql/test-sample.sql")
     params_list = [
-        {"player_id": 1, "season_id": 1},   # R6
+        {"player_id": 1, "season_id": 2022},   # R6
         {"player_id": 1, "game_id": 1},     # R7
         {"player_id": 1, "stat": "points"},  # R8
         {}                                  # R9
@@ -35,12 +35,22 @@ def test_sample(player_id: int):
 
     for i, query in enumerate(test_queries):
         param = params_list[i]
+        if i == 0:
+            query = query.format(player_id=param['player_id'], season_id=param['season_id'])
+        elif i == 1:
+            query = query.format(player_id=param['player_id'], game_id=param['game_id'])
+
+        elif i == 2:
+            query = query.format(player_id=param['player_id'], stat=param['stat'])
+        elif i == 3:
+            pass
+
         cursor.execute(query, param)
         results.append(cursor.fetchall())
 
     # print result
-    for r in results:
-        print(r)
+    for test_num, r in enumerate(results):
+        print(f"{test_num}\t\t{r}")
 
     return results
 

@@ -94,4 +94,4 @@ def get_player_stats():
 
 
 if __name__ == "__main__":
-    app.run(host=os.getenv("DB_HOST"), port=os.getenv("DB_PORT"))
+    app.run(host=os.getenv("DB_HOST"), port=5000, debug=True)

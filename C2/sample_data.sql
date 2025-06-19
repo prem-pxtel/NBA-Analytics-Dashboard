@@ -1,48 +1,49 @@
-INSERT INTO Player VALUES
-(1, 'LeBron James', '1984-12-30', 250, 81, 'SF', 2003, TRUE),
-(2, 'Stephen Curry', '1988-03-14', 185, 75, 'PG', 2009, TRUE),
-(3, 'Kevin Durant', '1988-09-29', 240, 82, 'SF', 2007, TRUE),
-(4, 'Giannis Antetokounmpo', '1994-12-06', 242, 83, 'PF', 2013, TRUE),
-(5, 'Jayson Tatum', '1998-03-03', 210, 80, 'SF', 2017, TRUE);
+-- Insert Season
+INSERT INTO Season VALUES
+(2022, 'Regular', '2022-10-01', '2023-04-15');
 
+-- Insert Teams
 INSERT INTO Team VALUES
 (1, 'Los Angeles Lakers', 'Los Angeles', 'LAL'),
 (2, 'Golden State Warriors', 'San Francisco', 'GSW'),
-(3, 'Boston Celtics', 'Boston', 'BOS');
+(3, 'Milwaukee Bucks', 'Milwaukee', 'MIL');
 
+-- Insert Players (order corrected to match schema)
+INSERT INTO Player VALUES
+(1, 'LeBron James', '1984-12-30', 'SF', TRUE, 250, 81, 2003),
+(2, 'Stephen Curry', '1988-03-14', 'PG', TRUE, 185, 74, 2009),
+(3, 'Giannis Antetokounmpo', '1994-12-06', 'PF', TRUE, 242, 83, 2013),
+(4, 'Kobe Bryant', '1978-08-23', 'SG', FALSE, 212, 78, 1996),
+(5, 'Kevin Durant', '1988-09-29', 'SF', TRUE, 240, 82, 2007);
+
+-- Insert Games
 INSERT INTO Game VALUES
-(1, '2022', '2022-12-15', 1, 2, 110, 105),
-(2, '2022', '2022-12-20', 3, 1, 102, 108);
+(1, 2022, '2022-10-20', 1, 2, 102, 99),
+(2, 2022, '2022-11-01', 3, 1, 120, 110);
 
-INSERT INTO PlayerSeasonStats VALUES
-(1, '2022', 27.5, 8.3, 7.1, 1.1),
-(2, '2022', 30.1, 6.5, 5.2, 0.4),
-(3, '2022', 28.2, 5.6, 6.0, 1.2),
-(4, '2022', 29.5, 5.9, 11.0, 1.3),
-(5, '2022', 26.4, 4.4, 7.1, 0.6);
-
-INSERT INTO PlayerGameStats VALUES
-(1, 1, 29, 7, 8, 1, 22, 10, 5, 4),
-(2, 1, 31, 6, 5, 0, 20, 11, 6, 6),
-(3, 1, 27, 5, 6, 2, 18, 9, 4, 3),
-(4, 2, 34, 4, 12, 3, 24, 13, 9, 6),
-(5, 2, 28, 5, 7, 1, 21, 10, 5, 5);
-
-INSERT INTO PlayerTeamHistory VALUES
-(1, 1, '2003', '2025'),
-(2, 2, '2009', '2025'),
-(3, 2, '2007', '2025'),
-(4, 3, '2013', '2025'),
-(5, 3, '2017', '2025');
-
+-- Insert Shots
 INSERT INTO Shot VALUES
-(1, 1, 1, '3PT', 'Made', 5, 32),
-(2, 1, 1, '2PT', 'Missed', 2, 18),
-(3, 2, 1, '3PT', 'Made', 1, 44),
-(4, 2, 1, '2PT', 'Missed', 0, 22),
-(5, 3, 1, '3PT', 'Made', 3, 15),
-(6, 4, 2, '2PT', 'Made', 4, 33),
-(7, 4, 2, '3PT', 'Missed', 2, 21),
-(8, 5, 2, '2PT', 'Made', 1, 14),
-(9, 5, 2, '3PT', 'Made', 0, 5);
+(1, 1, 1, '3PT', 'Made', 2, 15),
+(2, 2, 1, '2PT', 'Missed', 4, 10),
+(3, 3, 2, '3PT', 'Made', 3, 45),
+(4, 1, 2, '2PT', 'Made', 5, 20);
 
+-- Insert PlayerGameStats (includes team_id)
+INSERT INTO PlayerGameStats VALUES
+(1, 1, 1, 29, 7, 8, 1, 22, 10, 5, 4),
+(2, 1, 2, 31, 9, 6, 0, 18, 12, 3, 3),
+(3, 2, 3, 34, 5, 14, 2, 24, 15, 6, 5);
+
+-- Insert PlayerSeasonStats (uses season_id as INT and includes team_id)
+INSERT INTO PlayerSeasonStats VALUES
+(1, 1, 2022, 8.3, 27.5, 1.1, 7.1),
+(2, 2, 2022, 6.5, 25.3, 0.4, 5.2),
+(3, 3, 2022, 5.9, 29.9, 1.3, 11.4);
+
+-- Insert PlayerTeamHistory (start/end season as INTs)
+INSERT INTO PlayerTeamHistory VALUES
+(1, 1, 2003, 2023),
+(2, 2, 2009, 2023),
+(3, 3, 2013, 2023),
+(4, 1, 1996, 2016),
+(5, 2, 2007, 2016);

@@ -21,8 +21,11 @@ def test_sample(player_id: int):
     print("Sample data loaded")
 
     # test R6
-    r6_query = load_query("sql/r6_player_stats_per_season.sql")
-    cursor.execute(r6_query, (player_id))
+    test_query = load_query("sql/test-sample.sql")
+    cursor.execute(
+        test_query,
+        {"player_id": 1, "season_id": 1, "game_id": 1, "stat": "points"}
+    )
     results = cursor.fetchall()
     # print result
     for r in results:

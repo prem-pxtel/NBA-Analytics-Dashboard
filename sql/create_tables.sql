@@ -1,24 +1,25 @@
 -- drop tables if already exist
-DROP TABLE IF EXISTS Player;
-DROP TABLE IF EXISTS Team;
-DROP TABLE IF EXISTS Season;
-DROP TABLE IF EXISTS Game;
-DROP TABLE IF EXISTS Shot;
-DROP TABLE IF EXISTS PlayerGameStats;
-DROP TABLE IF EXISTS PlayerSeasonStats;
-DROP TABLE IF EXISTS PlayerTeamHistory;
+DROP TABLE IF EXISTS Player CASCADE;
+DROP TABLE IF EXISTS Team CASCADE;
+DROP TABLE IF EXISTS Season CASCADE;
+DROP TABLE IF EXISTS Game CASCADE;
+DROP TABLE IF EXISTS Shot CASCADE;
+DROP TABLE IF EXISTS PlayerGameStats CASCADE;
+DROP TABLE IF EXISTS PlayerSeasonStats CASCADE;
+DROP TABLE IF EXISTS PlayerTeamHistory CASCADE;
 
 -- Player table
 CREATE TABLE Player (
     player_id INT PRIMARY KEY,
     player_name VARCHAR(100),
     birth_date DATE,
+    position VARCHAR(10),
+    is_active BOOLEAN,
     weight INT,
     height INT,
-    position VARCHAR(10),
-    draft_year INT,
-    is_active BOOLEAN
+    draft_year INT
 );
+
 -- Team table
 CREATE TABLE Team (
     team_id INT PRIMARY KEY,
@@ -26,6 +27,7 @@ CREATE TABLE Team (
     city VARCHAR(100),
     abbreviation VARCHAR(10)
 );
+
 -- Season table
 CREATE TABLE Season (
     season_id INT PRIMARY KEY,
@@ -33,6 +35,7 @@ CREATE TABLE Season (
     season_start_date DATE,
     season_end_date DATE
 );
+
 -- Game table 
 CREATE TABLE Game (
     game_id INT PRIMARY KEY,
@@ -46,6 +49,7 @@ CREATE TABLE Game (
     FOREIGN KEY (home_team_id) REFERENCES Team(team_id),
     FOREIGN KEY (away_team_id) REFERENCES Team(team_id)
 );
+
 -- Shot table
 CREATE TABLE Shot (
     shot_id INT PRIMARY KEY,
@@ -58,6 +62,7 @@ CREATE TABLE Shot (
     FOREIGN KEY (player_id) REFERENCES Player(player_id),
     FOREIGN KEY (game_id) REFERENCES Game(game_id)
 );
+
 -- PlayerGameStats table
 CREATE TABLE PlayerGameStats (
     player_id INT,
@@ -76,6 +81,7 @@ CREATE TABLE PlayerGameStats (
     FOREIGN KEY (game_id) REFERENCES Game(game_id),
     FOREIGN KEY (team_id) REFERENCES Team(team_id)
 );
+
 -- PlayerSeasonStats table (now using season_id)
 CREATE TABLE PlayerSeasonStats (
     player_id INT,
@@ -90,6 +96,7 @@ CREATE TABLE PlayerSeasonStats (
     FOREIGN KEY (team_id) REFERENCES Team(team_id),
     FOREIGN KEY (season_id) REFERENCES Season(season_id)
 );
+
 -- PlayerTeamHistory table
 CREATE TABLE PlayerTeamHistory (
     player_id INT,

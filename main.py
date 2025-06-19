@@ -1,27 +1,53 @@
+import os
 import psycopg2
+from dotenv import load_dotenv
 
-host = "localhost"
-port = 5432
-database = "groupproject"
-user = "team"
 
-db = psycopg2.connect(host=host, port=port, database=database, user=user)
-cursor = db.cursor()
-print("Connected")
+def run_sql_file(path: str):
+    with open(path, 'r') as sql_file:
+        sql = sql_file.read()
+        cursor.execute(sql)
+        db.commit()
 
-create_table = """
-CREATE TABLE IF NOT EXISTS players (
-id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-name VARCHAR NOT NULL);"""
-cursor.execute(create_table)
-db.commit()
 
-insert_players_query = """INSERT INTO players(name) VALUES (%s);"""
-cursor.execute(insert_players_query, ("Lebron James",))
-db.commit()
+def load_query(path: str):
+    with open(path, 'r') as file:
+        return file.read()
 
-read_players_query = """SELECT * FROM players"""
-cursor.execute(read_players_query)
-rows = cursor.fetchall()
-print("Here are the players", rows)
 
+def test_sample(player_id: int):
+    # insert sample data
+    run_sql_file("sql/sample_data.sql")
+    print("Sample data loaded")
+
+    # test R6
+    r6_query = load_query("sql/r6_player_stats_per_season.sql")
+    cursor.execute(r6_query, (player_id))
+    results = cursor.fetchall()
+    # print result
+    for r in results:
+        print(r)
+
+    return results
+
+
+if __name__ == "__main__":
+    load_dotenv()
+
+    # connect to database
+    db = psycopg2.connect(
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT"),
+        database=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER")
+        # password=os.getenv("DB_PWD")
+    )
+    cursor = db.cursor()
+    print("Connected to database")
+
+    # create tables
+    run_sql_file("sql/create_tables.sql")
+    print("Created tables")
+
+    # run test
+    test_sample(player_id=1)

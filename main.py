@@ -12,7 +12,9 @@ def run_sql_file(path: str):
 
 def load_query(path: str):
     with open(path, 'r') as file:
-        return file.read()
+        sql = file.read()
+
+    return [q.strip() for q in sql.split(';') if q.strip()]
 
 
 def test_sample(player_id: int):
@@ -20,13 +22,22 @@ def test_sample(player_id: int):
     run_sql_file("sql/sample_data.sql")
     print("Sample data loaded")
 
-    # test R6
-    test_query = load_query("sql/test-sample.sql")
-    cursor.execute(
-        test_query,
-        {"player_id": 1, "season_id": 1, "game_id": 1, "stat": "points"}
-    )
-    results = cursor.fetchall()
+    # load queries and set param for each
+    test_queries = load_query("sql/test-sample.sql")
+    params_list = [
+        {"player_id": 1, "season_id": 1},   # R6
+        {"player_id": 1, "game_id": 1},     # R7
+        {"player_id": 1, "stat": "points"},  # R8
+        {}                                  # R9
+    ]
+
+    results = []
+
+    for i, query in enumerate(test_queries):
+        param = params_list[i]
+        cursor.execute(query, param)
+        results.append(cursor.fetchall())
+
     # print result
     for r in results:
         print(r)

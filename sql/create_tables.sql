@@ -12,12 +12,12 @@ DROP TABLE IF EXISTS PlayerTeamHistory;
 CREATE TABLE Player (
     player_id INT PRIMARY KEY,
     player_name VARCHAR(100),
-    position VARCHAR(10),
-    is_active BOOLEAN,
-    height INT,
+    birth_date DATE,
     weight INT,
+    height INT,
+    position VARCHAR(10),
     draft_year INT,
-    birth_date DATE
+    is_active BOOLEAN
 );
 -- Team table
 CREATE TABLE Team (

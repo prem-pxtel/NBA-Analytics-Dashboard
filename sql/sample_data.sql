@@ -26,7 +26,9 @@ INSERT INTO Season VALUES
 INSERT INTO Team VALUES
 (1, 'Los Angeles Lakers', 'Los Angeles', 'LAL'),
 (2, 'Golden State Warriors', 'San Francisco', 'GSW'),
-(3, 'Milwaukee Bucks', 'Milwaukee', 'MIL');
+(3, 'Milwaukee Bucks', 'Milwaukee', 'MIL'),
+(4, 'Cleveland Cavaliers', 'Cleveland', 'CLE'),
+(5, 'Miami Heat', 'Miami', 'MIA');
 
 -- Insert Players (order corrected to match schema)
 INSERT INTO Player VALUES
@@ -83,7 +85,10 @@ INSERT INTO PlayerSeasonStats VALUES
 
 -- Insert PlayerTeamHistory (start/end season as INTs)
 INSERT INTO PlayerTeamHistory VALUES
-(1, 1, 2003, 2023),
+(1, 4, 2003, 2010),
+(1, 5, 2010, 2014),
+(1, 4, 2014, 2018),
+(1, 1, 2018, 2025);
 (2, 2, 2009, 2023),
 (3, 3, 2013, 2023),
 (4, 1, 1996, 2016),

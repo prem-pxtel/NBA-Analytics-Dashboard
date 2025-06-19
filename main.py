@@ -15,7 +15,23 @@ def load_query(path: str):
         return file.read()
 
 
-def main():
+def test_sample(player_id: int):
+    # insert sample data
+    run_sql_file("sql/sample_data.sql")
+    print("Sample data loaded")
+
+    # test R6
+    r6_query = load_query("sql/r6_player_stats_per_season.sql")
+    cursor.execute(r6_query, (player_id))
+    results = cursor.fetchall()
+    # print result
+    for r in results:
+        print(r)
+
+    return results
+
+
+if __name__ == "__main__":
     load_dotenv()
 
     # connect to database
@@ -24,6 +40,7 @@ def main():
         port=os.getenv("DB_PORT"),
         database=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER")
+        # password=os.getenv("DB_PWD")
     )
     cursor = db.cursor()
     print("Connected to database")
@@ -32,13 +49,5 @@ def main():
     run_sql_file("sql/create_tables.sql")
     print("Created tables")
 
-    # insert sample data
-    run_sql_file("sql/sample_data.sql")
-    print("Sample data loaded")
-
-    # test R6
-    # r6_query = load_query()
-
-
-if __name__ == "__main__":
-    main()
+    # run test
+    test_sample(player_id=1)

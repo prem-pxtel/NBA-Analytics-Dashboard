@@ -2,14 +2,13 @@
 CREATE TABLE Player (
     player_id INT PRIMARY KEY,
     player_name VARCHAR(100),
-    birth_date DATE,
     position VARCHAR(10),
     is_active BOOLEAN,
-    weight INT,
     height INT,
-    draft_year INT
+    weight INT,
+    draft_year INT,
+    birth_date DATE
 );
-
 -- Team table
 CREATE TABLE Team (
     team_id INT PRIMARY KEY,
@@ -17,7 +16,6 @@ CREATE TABLE Team (
     city VARCHAR(100),
     abbreviation VARCHAR(10)
 );
-
 -- Season table
 CREATE TABLE Season (
     season_id INT PRIMARY KEY,
@@ -25,7 +23,6 @@ CREATE TABLE Season (
     season_start_date DATE,
     season_end_date DATE
 );
-
 -- Game table 
 CREATE TABLE Game (
     game_id INT PRIMARY KEY,
@@ -39,7 +36,6 @@ CREATE TABLE Game (
     FOREIGN KEY (home_team_id) REFERENCES Team(team_id),
     FOREIGN KEY (away_team_id) REFERENCES Team(team_id)
 );
-
 -- Shot table
 CREATE TABLE Shot (
     shot_id INT PRIMARY KEY,
@@ -52,7 +48,6 @@ CREATE TABLE Shot (
     FOREIGN KEY (player_id) REFERENCES Player(player_id),
     FOREIGN KEY (game_id) REFERENCES Game(game_id)
 );
-
 -- PlayerGameStats table
 CREATE TABLE PlayerGameStats (
     player_id INT,
@@ -71,7 +66,6 @@ CREATE TABLE PlayerGameStats (
     FOREIGN KEY (game_id) REFERENCES Game(game_id),
     FOREIGN KEY (team_id) REFERENCES Team(team_id)
 );
-
 -- PlayerSeasonStats table (now using season_id)
 CREATE TABLE PlayerSeasonStats (
     player_id INT,
@@ -86,7 +80,6 @@ CREATE TABLE PlayerSeasonStats (
     FOREIGN KEY (team_id) REFERENCES Team(team_id),
     FOREIGN KEY (season_id) REFERENCES Season(season_id)
 );
-
 -- PlayerTeamHistory table
 CREATE TABLE PlayerTeamHistory (
     player_id INT,

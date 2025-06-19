@@ -1,9 +1,8 @@
 -- R6: Player Stats Per Season
 -- Retrieves per-season stats for a given player_id, ordered by season
-
-SELECT
-    p.player_name,
-    s.season_year,
+SELECT p.player_name,
+    s.season_id,
+    s.season_type,
     t.team_name,
     ps.points_per_game,
     ps.assists_per_game,
@@ -14,4 +13,4 @@ FROM PlayerSeasonStats ps
     JOIN Team t ON ps.team_id = t.team_id
     JOIN Player p ON ps.player_id = p.player_id
 WHERE ps.player_id = %s
-ORDER BY s.season_year;
+ORDER BY s.season_id;

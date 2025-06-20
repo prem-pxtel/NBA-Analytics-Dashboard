@@ -11,9 +11,10 @@ For this milestone, we are using a simple dataset to demonstrate database setup 
 
 You will need the following installed:
 
-- Python 3.x (with Flask)
-- PostgreSQL
+- Python 3.x (with Flask and Flask-CORS)
+- PostgreSQL v14+
 - Git (to clone the repository)
+- NPM to install React
 
 ---
 
@@ -24,3 +25,16 @@ You will need the following installed:
 ```bash
 git clone https://github.com/saileshp56/CS348-Group-Project.git
 cd CS348-Group-Project
+```
+Terminal 1:
+```bash
+cd milestone1/
+npm start
+```
+Terminal 2:
+```bash
+python3 main.py
+```
+
+
+

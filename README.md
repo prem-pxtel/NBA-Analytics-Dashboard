@@ -20,18 +20,17 @@ You will need the following installed:
 
 ## 3. Setting Up the Sample Database
 
-### Step 1: Clone the Repository
-
+### Clone the Repository
 ```bash
 git clone https://github.com/saileshp56/CS348-Group-Project.git
 cd CS348-Group-Project
 ```
-Terminal 1:
+### Terminal 1:
 ```bash
 cd milestone1/
 npm start
 ```
-Terminal 2:
+### Terminal 2:
 ```bash
 python3 main.py
 ```

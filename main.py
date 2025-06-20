@@ -2,9 +2,11 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 load_dotenv()
 app = Flask(__name__)
+CORS(app)
 
 
 def get_db_connection():
@@ -33,7 +35,7 @@ def load_query(path: str):
 def get_player_stats_by_player_name(cursor, player_name: str):
     query = """
     SELECT p.player_name,
-    s.season_type,
+    s.season_id,
     t.team_name,
     ps.points_per_game,
     ps.assists_per_game,
@@ -53,7 +55,6 @@ WHERE p.player_name ILIKE %s;
     except Exception as e:
         print(f"Error executing query: {e}")
         return []
-
 
 
 def test_sample(cursor, player_id: int, season_id: int, game_id: int, stat: str):
@@ -82,8 +83,6 @@ def test_sample(cursor, player_id: int, season_id: int, game_id: int, stat: str)
     return results
 
 # API endpoint
-
-
 @app.route("/api/player/player_stats", methods=["GET"])
 def get_player_stats():
     # get query parameters
@@ -92,20 +91,12 @@ def get_player_stats():
     except:
         return jsonify({"error": "Missing or invalid parameters"}), 400
 
-    # connect to database
+    # connect to db
     db = get_db_connection()
     cursor = db.cursor()
     print("Connected to database")
 
-    # create & load tables
-    run_sql_file(cursor, db, "sql/create_tables.sql")
-    print("Created tables")
-    run_sql_file(cursor, db, "sql/sample_data.sql")
-    print("Loaded tables")
-
-    # run test
     results = get_player_stats_by_player_name(cursor, player_name)
-
 
     db.close()
     return jsonify({
@@ -115,4 +106,18 @@ def get_player_stats():
 
 
 if __name__ == "__main__":
-    app.run(host=os.getenv("DB_HOST"), port=6000, debug=True)
+    # init db
+    print("Initializing database...")
+    db = get_db_connection()
+    cursor = db.cursor()
+    
+    try:
+        run_sql_file(cursor, db, "sql/create_tables.sql")
+        print("Created tables")
+        run_sql_file(cursor, db, "sql/sample_data.sql")
+        print("Loaded sample data")
+    except Exception as e:
+        print(f"Database initialization error (might already be initialized): {e}")
+    finally:
+        db.close()
+    app.run(host=os.getenv("DB_HOST"), port=8000, debug=True)

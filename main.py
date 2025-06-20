@@ -30,6 +30,31 @@ def load_query(path: str):
 
     return [q.strip() for q in sql.split(';') if q.strip()]
 
+def get_player_stats_by_player_name(cursor, player_name: str):
+    query = """
+    SELECT p.player_name,
+    s.season_type,
+    t.team_name,
+    ps.points_per_game,
+    ps.assists_per_game,
+    ps.rebounds_per_game,
+    ps.blocks_per_game
+FROM PlayerSeasonStats ps
+    JOIN Season s ON ps.season_id = s.season_id
+    JOIN Team t ON ps.team_id = t.team_id
+    JOIN Player p ON ps.player_id = p.player_id
+WHERE p.player_name ILIKE %s;
+    """
+    
+    try:
+        cursor.execute(query, (player_name,))
+        results = cursor.fetchall()
+        return results
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        return []
+
+
 
 def test_sample(cursor, player_id: int, season_id: int, game_id: int, stat: str):
     # load queries
@@ -59,14 +84,11 @@ def test_sample(cursor, player_id: int, season_id: int, game_id: int, stat: str)
 # API endpoint
 
 
-@app.route("/api/player_stats", methods=["GET"])
+@app.route("/api/player/player_stats", methods=["GET"])
 def get_player_stats():
     # get query parameters
     try:
-        player_id = int(request.args.get("player_id"))
-        season_id = int(request.args.get("season_id"))
-        game_id = int(request.args.get("game_id"))
-        stat = request.args.get("stat")
+        player_name = str(request.args.get("player_name"))
     except:
         return jsonify({"error": "Missing or invalid parameters"}), 400
 
@@ -82,16 +104,15 @@ def get_player_stats():
     print("Loaded tables")
 
     # run test
-    results = test_sample(cursor, player_id, season_id, game_id, stat)
+    results = get_player_stats_by_player_name(cursor, player_name)
+
 
     db.close()
     return jsonify({
-        "r6_player_season_stats": results[0],
-        "r7_player_game_stats": results[1],
-        "r8_best_game_by_stat": results[2],
-        "r9_all_time_top_scorers": results[3]
+        "player_name": player_name,
+        "season_stats": results
     })
 
 
 if __name__ == "__main__":
-    app.run(host=os.getenv("DB_HOST"), port=5000, debug=True)
+    app.run(host=os.getenv("DB_HOST"), port=6000, debug=True)

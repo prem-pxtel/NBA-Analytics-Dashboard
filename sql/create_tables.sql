@@ -91,7 +91,7 @@ CREATE TABLE PlayerSeasonStats (
     points_per_game FLOAT,
     blocks_per_game FLOAT,
     rebounds_per_game FLOAT,
-    PRIMARY KEY (player_id, team_id, season_id),
+    PRIMARY KEY (player_id, season_id),
     FOREIGN KEY (player_id) REFERENCES Player(player_id),
     FOREIGN KEY (team_id) REFERENCES Team(team_id),
     FOREIGN KEY (season_id) REFERENCES Season(season_id)
@@ -103,7 +103,7 @@ CREATE TABLE PlayerTeamHistory (
     team_id INT,
     start_season INT,
     end_season INT,
-    PRIMARY KEY (player_id, team_id, start_season),
+    PRIMARY KEY (player_id, start_season),
     FOREIGN KEY (player_id) REFERENCES Player(player_id),
     FOREIGN KEY (team_id) REFERENCES Team(team_id)
 );

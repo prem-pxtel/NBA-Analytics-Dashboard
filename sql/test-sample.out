@@ -1,0 +1,21 @@
+ player_name  | season_type |     team_name      | points_per_game | assists_per_game | rebounds_per_game | blocks_per_game 
+--------------+-------------+--------------------+-----------------+------------------+-------------------+-----------------
+ LeBron James | Regular     | Los Angeles Lakers |             6.8 |             28.9 |               0.5 |             8.3
+(1 row)
+
+    date    |      opponent      | points | assists | rebounds | blocks 
+------------+--------------------+--------+---------+----------+--------
+ 2022-10-20 | Los Angeles Lakers |     31 |       9 |        6 |      0
+(1 row)
+
+    date    |      opponent      | points | assists | rebounds | blocks 
+------------+--------------------+--------+---------+----------+--------
+ 2022-11-01 | Los Angeles Lakers |     34 |       5 |       14 |      2
+(1 row)
+
+      player_name      | total_points 
+-----------------------+--------------
+ Giannis Antetokounmpo |           34
+ Stephen Curry         |           31
+ LeBron James          |           29
+(3 rows)

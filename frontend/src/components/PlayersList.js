@@ -1,23 +1,24 @@
 import React, {useState, useEffect} from 'react'
 
-const PlayersList = ({searchTerm}) => {
+const PlayersList = ({searchTerm, handleSelectPlayer}) => {
     const [playersData, setPlayersData] = useState([]);
 
     useEffect(() => {
         if (searchTerm) {
-            console.log("Ok we searching player with name =", searchTerm)
-            fetch(`http://localhost:8000/api/player/player_stats?player_name=${encodeURIComponent(searchTerm)}`)
+            fetch(`http://localhost:8000/api/player/season_stats?player_name=${encodeURIComponent(searchTerm)}`)
                 .then(response => response.json())
                 .then(data => {
-        const santizedData = data.season_stats.map(record => ({
-            player_name: record[0],
-            year: record[1],
-                        team_name: record[2],
-            points_per_game: record[3],
-            assists_per_game: record[4],
-            rebounds_per_game: record[5],
-            blocks_per_game: record[6]
+        const santizedData = data.map(record => ({
+            player_name: record["player_name"],
+            year: record["season_id"],
+                        team_name: record["team_name"],
+            points_per_game: record["points_per_game"],
+            assists_per_game: record["assists_per_game"],
+            rebounds_per_game: record["rebounds_per_game"],
+            blocks_per_game: record["blocks_per_game"]
+
         }));
+
         setPlayersData(santizedData);
                 });
         } else {
@@ -32,17 +33,17 @@ const PlayersList = ({searchTerm}) => {
                 <thead>
                     <tr>
                         <th>Player</th>
-                        <th>Season</th>
-                            <th>Team</th>
-                                  <th>Points per game</th>
-                            <th>Assists per game</th>
+            <th>Season</th>
+                <th>Team</th>
+                        <th>Points per game</th>
+                <th>Assists per game</th>
                 <th>Rebounds per game</th>
                 <th>Blocks per game</th>
             </tr>
         </thead>
         <tbody>
             {playersData.map((playerSeason, index) => (
-                <tr key={index}>
+                <tr key={index} onClick={() => {handleSelectPlayer(playerSeason.player_name)}}>
                         <td>{playerSeason.player_name}</td>
                     <td>{playerSeason.year}</td>
                 <td>{playerSeason.team_name}</td>

@@ -10,10 +10,27 @@
 }
 
 .players-table th, .players-table td {
-  border: 1px solid #bbbaba;
+  border: 1px solid #b3b1b1;
   padding: 8px;
 }
 
 .players-table th {
-  background-color: #eeebeb;
+  background-color: #f7f6f6;
+}
+
+
+.dropdown-section {
+  margin-bottom: 20px;
+}
+
+.dropdown-label {
+  font-size: 16px;
+}
+
+.stat-select {
+  font-size: 16px;
+  border: 2px solid #d2d1d1;
+  border-radius: 8px;
+  background-color: white;
+  min-width: 400px;
 }

@@ -154,7 +154,7 @@ def best_game_by_stat():
     if not player_name or not stat or stat not in valid_stats:
         return jsonify({"error": "Missing or invalid parameters"}), 400
 
-    query = """
+    query = f"""
     SELECT 
         g.game_date AS date,
     CASE
@@ -171,13 +171,13 @@ def best_game_by_stat():
         JOIN Team home ON g.home_team_id = home.team_id
         JOIN Team away ON g.away_team_id = away.team_id
     WHERE p.player_name = %s
-    ORDER BY pg.%s DESC
+    ORDER BY pg.{stat} DESC
     LIMIT 1;
     """
 
     db = get_db_connection()
     cur = db.cursor()
-    cur.execute(query, (player_name, stat))
+    cur.execute(query, (player_name,))
     result = cur.fetchone()
     db.close()
 

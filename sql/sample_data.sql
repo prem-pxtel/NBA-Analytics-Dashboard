@@ -58,8 +58,8 @@ INSERT INTO PlayerGameStats VALUES
 
 -- Insert PlayerSeasonStats (uses season_id as INT and includes team_id)
 INSERT INTO PlayerSeasonStats VALUES
-(2, 2, 2022, 6.5, 25.3, 0.4, 5.2),
-(3, 3, 2022, 5.9, 29.9, 1.3, 11.4),
+(2, 2, 2022, 25.3, 6.5, 0.4, 5.2),
+(3, 3, 2022, 29.9, 5.9, 1.3, 11.4),
 (1, 4, 2003, 20.9, 5.9, 5.5, 0.7),
 (1, 4, 2004, 27.2, 7.2, 7.4, 0.7),
 (1, 4, 2005, 31.4, 6.6, 7.0, 0.8),

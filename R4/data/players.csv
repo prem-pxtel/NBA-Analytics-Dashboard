@@ -169,7 +169,7 @@ PERSON_ID,DISPLAY_LAST_COMMA_FIRST,DISPLAY_FIRST_LAST,ROSTERSTATUS,FROM_YEAR,TO_
 1630555,"Ayayi, Joel",Joel Ayayi,0,2021,2021,joel_ayayi,joel_ayayi,0,,,,,,Y,01
 202970,"Ayon, Gustavo",Gustavo Ayon,0,2011,2013,gustavo_ayon,gustavo_ayon,0,,,,,,Y,00
 201965,"Ayres, Jeff",Jeff Ayres,0,2009,2015,jeff_ayres,jeff_ayres,0,,,,,,Y,01
-1629028,"Ayton, Deandre",Deandre Ayton,1,2018,2024,deandre_ayton,deandre_ayton,1610612757,Portland,Trail Blazers,POR,blazers,blazers,Y,00
+1629028,"Ayton, Deandre",Deandre Ayton,1,2018,2025,deandre_ayton,deandre_ayton,1610612757,Portland,Trail Blazers,POR,blazers,blazers,Y,00
 101235,"Azubuike, Kelenna",Kelenna Azubuike,0,2006,2011,kelenna_azubuike,kelenna_azubuike,0,,,,,,Y,00
 1628962,"Azubuike, Udoka",Udoka Azubuike,0,2020,2023,udoka_azubuike,udoka_azubuike,0,,,,,,Y,01
 203569,"Babb, Chris",Chris Babb,0,2013,2014,chris_babb,chris_babb,0,,,,,,Y,01
@@ -1725,6 +1725,7 @@ PERSON_ID,DISPLAY_LAST_COMMA_FIRST,DISPLAY_FIRST_LAST,ROSTERSTATUS,FROM_YEAR,TO_
 201981,"Griffin, Taylor",Taylor Griffin,0,2009,2009,taylor_griffin,taylor_griffin,0,,,,,,Y,01
 76890,"Griffith, Darrell",Darrell Griffith,0,1980,1990,HISTADD_darrell_griffith,darrell_griffith,0,,,,,,Y,00
 76891,"Grigsby, Chuck",Chuck Grigsby,0,1954,1954,HISTADD_chuck_grigsby,chuck_grigsby,0,,,,,,Y,00
+1642934,"Grill, Caleb",Caleb Grill,0,2025,2025,caleb_grill,caleb_grill,0,,,,,,N,00
 1629656,"Grimes, Quentin",Quentin Grimes,1,2021,2025,quentin_grimes,quentin_grimes,1610612755,Philadelphia,76ers,PHI,sixers,sixers,Y,00
 1575,"Grimm, Derek",Derek Grimm,0,1997,1997,derek_grimm,derek_grimm,0,,,,,,Y,00
 76893,"Grimshaw, George",George Grimshaw,0,1946,1946,HISTADD_woodie_grimshaw,george_grimshaw,0,,,,,,Y,00
@@ -3593,7 +3594,7 @@ PERSON_ID,DISPLAY_LAST_COMMA_FIRST,DISPLAY_FIRST_LAST,ROSTERSTATUS,FROM_YEAR,TO_
 202354,"Pittman, Dexter",Dexter Pittman,0,2010,2013,dexter_pittman,dexter_pittman,0,,,,,,Y,01
 2565,"Planinic, Zoran",Zoran Planinic,0,2003,2005,zoran_planinic,zoran_planinic,0,,,,,,Y,00
 202353,"Pleiss, Tibor",Tibor Pleiss,0,2015,2015,tibor_pleiss,tibor_pleiss,0,,,,,,Y,01
-1631342,"Plowden, Daeqwon",Daeqwon Plowden,1,2024,2025,daeqwon_plowden,daeqwon_plowden,1610612737,Atlanta,Hawks,ATL,hawks,hawks,Y,11
+1631342,"Plowden, Daeqwon",Daeqwon Plowden,1,2024,2024,daeqwon_plowden,daeqwon_plowden,1610612737,Atlanta,Hawks,ATL,hawks,hawks,Y,11
 1627850,"Plumlee, Marshall",Marshall Plumlee,0,2016,2017,marshall_plumlee,marshall_plumlee,0,,,,,,Y,01
 203486,"Plumlee, Mason",Mason Plumlee,1,2013,2025,mason_plumlee,mason_plumlee,1610612756,Phoenix,Suns,PHX,suns,suns,Y,01
 203101,"Plumlee, Miles",Miles Plumlee,0,2012,2018,miles_plumlee,miles_plumlee,0,,,,,,Y,01
@@ -3615,6 +3616,7 @@ PERSON_ID,DISPLAY_LAST_COMMA_FIRST,DISPLAY_FIRST_LAST,ROSTERSTATUS,FROM_YEAR,TO_
 1629673,"Poole, Jordan",Jordan Poole,1,2019,2025,jordan_poole,jordan_poole,1610612764,Washington,Wizards,WAS,wizards,wizards,Y,01
 77870,"Pope, David",David Pope,0,1984,1985,HISTADD_david_pope,david_pope,0,,,,,,Y,00
 998,"Pope, Mark",Mark Pope,0,1997,2004,mark_pope,mark_pope,0,,,,,,Y,00
+1642390,"Poplar, Wooga",Wooga Poplar,0,2025,2025,wooga_poplar,wooga_poplar,0,,,,,,N,00
 77872,"Popson, Dave",Dave Popson,0,1988,1991,HISTADD_dave_popson,dave_popson,0,,,,,,Y,00
 77873,"Poquette, Ben",Ben Poquette,0,1977,1986,HISTADD_ben_poquette,ben_poquette,0,,,,,,Y,00
 2084,"Porter, Chris",Chris Porter,0,2000,2000,chris_porter,chris_porter,0,,,,,,Y,01

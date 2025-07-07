@@ -27,7 +27,7 @@ cd CS348-Group-Project
 ```
 ### Terminal 1:
 ```bash
-cd milestone1/
+cd frontend/
 npm start
 ```
 ### Terminal 2:

@@ -13,7 +13,7 @@ CREATE TABLE Player (
     player_id INT PRIMARY KEY,
     player_name VARCHAR(100),
     birth_date DATE,
-    position VARCHAR(10),
+    position VARCHAR(30),
     is_active BOOLEAN,
     weight INT,
     height INT,

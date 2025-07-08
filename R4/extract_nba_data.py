@@ -8,6 +8,13 @@ import time
 
 os.makedirs("data", exist_ok=True)
 
+def convert_height_to_inches(height_str):
+    try:
+        feet, inches = height_str.split("-")
+        return int(feet) * 12 + int(inches)
+    except:
+        return None
+
 def save_teams():
     all_teams = teams.get_teams()
     df = pd.DataFrame(all_teams)
@@ -30,18 +37,32 @@ def save_players():
     })
     detailed_data = []
 
-    for _, row in players.iterrows():
+    for i, row in players.iterrows():
         player_id = row["player_id"]
         player_name = row["player_name"]
         is_active = row["is_active"]
         try:
             info = commonplayerinfo.CommonPlayerInfo(player_id=player_id).get_data_frames()[0]
-            birth_date = info.at[0, "BIRTHDATE"]
+            birth_date_raw = info.at[0, "BIRTHDATE"]
             position = info.at[0, "POSITION"]
             weight = info.at[0, "WEIGHT"]
-            height = info.at[0, "HEIGHT"]
-            draft_year = info.at[0, "DRAFT_YEAR"]
-        except:
+            height_raw = info.at[0, "HEIGHT"]
+            draft_year_raw = info.at[0, "DRAFT_YEAR"]
+
+            # Format birth_date as YYYY-MM-DD
+            birth_date = pd.to_datetime(birth_date_raw).date()
+
+            # Convert height "6-8" to inches
+            if isinstance(height_raw, str) and '-' in height_raw:
+                feet, inches = map(int, height_raw.split('-'))
+                height = feet * 12 + inches
+            else:
+                height = None
+
+            # Turns undrafted to NULL
+            draft_year = None if draft_year_raw == "Undrafted" else draft_year_raw
+
+        except Exception as e:
             birth_date, position, weight, height, draft_year = None, None, None, None, None
 
         detailed_data.append({
@@ -60,6 +81,7 @@ def save_players():
     df = pd.DataFrame(detailed_data)
     df.to_csv("data/players.csv", index=False)
     print("Saved data/players.csv")
+
 
 def save_seasons():
     df = pd.DataFrame([{
@@ -92,8 +114,9 @@ def save_games(season="2023-24"):
 
                 home_team_id = team_id if is_home else opp_team_id
                 away_team_id = opp_team_id if is_home else team_id
-                home_score = row["PTS"] if is_home else None
-                away_score = row["PTS"] if not is_home else None
+                "home_score": int(row["PTS"]) if is_home else None
+                "away_score": int(row["PTS"]) if not is_home else None
+
 
                 all_games.append({
                     "game_id": game_id,
@@ -101,8 +124,8 @@ def save_games(season="2023-24"):
                     "game_date": pd.to_datetime(row["GAME_DATE"]),
                     "home_team_id": home_team_id,
                     "away_team_id": away_team_id,
-                    "home_score": home_score,
-                    "away_score": away_score
+                    "home_score": int(home_score) if home_score is not None else None,
+                    "away_score": int(away_score) if away_score is not None else None
                 })
             time.sleep(1.2)
         except Exception as e:
@@ -113,6 +136,7 @@ def save_games(season="2023-24"):
     print("Saved data/games.csv")
 
 def save_box_scores(game_ids, max_games=50, output_file="data/boxscores.csv"):
+    stats_rows = []
     for i, gid in enumerate(game_ids[:max_games]):
         try:
             df = boxscoretraditionalv2.BoxScoreTraditionalV2(game_id=gid).get_data_frames()[0]
@@ -130,13 +154,24 @@ def save_box_scores(game_ids, max_games=50, output_file="data/boxscores.csv"):
                 "FTM": "FTM"
             })
             df = df[["player_id", "game_id", "team_id", "points", "assists", "rebounds", "blocks", "FGA", "FGM", "FTA", "FTM"]]
-
-            if df[["points", "assists", "rebounds"]].notna().sum().sum() > 0:
-                df.to_csv(output_file, mode='a', index=False, header=not os.path.exists(output_file))
-                print(f"Box score {i+1}/{max_games} saved for game_id {gid}")
+            df = df.astype({
+                "points": "Int64",
+                "assists": "Int64",
+                "rebounds": "Int64",
+                "blocks": "Int64",
+                "FGA": "Int64",
+                "FGM": "Int64",
+                "FTA": "Int64",
+                "FTM": "Int64"
+            })
+            stats_rows.append(df)
+            print(f"Fetched box score {i+1}/{max_games}")
             time.sleep(1.2)
         except Exception as e:
             print(f"Box score error for game {gid}: {e}")
+    if stats_rows:
+        pd.concat(stats_rows, ignore_index=True).to_csv(output_file, index=False)
+        print(f"Saved cleaned box scores to {output_file}")
 
 if __name__ == "__main__":
     save_teams()

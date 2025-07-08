@@ -1,53 +1,53 @@
 import pandas as pd
-import os
 from nba_api.stats.endpoints import playercareerstats
-from datetime import datetime
 import time
+import os
 
-def extract_team_history(player_id, max_years=5):
-    try:
-        df = playercareerstats.PlayerCareerStats(player_id=player_id).get_data_frames()[0]
-        df = df[df["LEAGUE_ID"] == "00"][["SEASON_ID", "TEAM_ID"]]
-        if df.empty:
-            return []
-
-        df["start_year"] = df["SEASON_ID"].apply(lambda x: int(x.split("-")[0]))
-        cutoff = datetime.now().year - max_years
-        df = df[df["start_year"] >= cutoff]
-        if df.empty:
-            return []
-
-        df = df.sort_values("start_year")
-        grouped = df.groupby("TEAM_ID")["start_year"]
-        periods = grouped.agg(["min", "max"]).reset_index()
-        periods.columns = ["team_id", "start_season", "end_season"]
-        periods["player_id"] = player_id
-        return periods[["player_id", "team_id", "start_season", "end_season"]].to_dict("records")
-    except Exception as e:
-        print(f"Failed for player {player_id}: {e}")
-        return []
-
-def save_player_team_history():
+def save_cleaned_player_team_history():
     players_csv = os.path.join("data", "players.csv")
     output_csv = os.path.join("data", "player_team_history.csv")
-    
+
     players_df = pd.read_csv(players_csv)
     player_ids = players_df["player_id"].tolist()
 
+    all_team_data = []
 
-    all_team_history = []
-    for i, player_id in enumerate(player_ids, 1):
-        records = extract_team_history(player_id)
-        all_team_history.extend(records)
-        print(f"{i}/{len(player_ids)}: Added {len(records)} team records for player_id {player_id}")
-        time.sleep(0.6)  # to avoid hitting rate limits
+    for i, player_id in enumerate(player_ids):
+        try:
+            career = playercareerstats.PlayerCareerStats(player_id=player_id)
+            df = career.get_data_frames()[0]
 
-    if all_team_history:
-        df = pd.DataFrame(all_team_history)
-        df.to_csv(output_csv, index=False)
-        print(f"Saved {len(df)} records to {output_csv}")
-    else:
-        print("No team history data extracted.")
+            # Convert SEASON_ID to numeric start year for sorting
+            df["SEASON_SORT"] = df["SEASON_ID"].apply(lambda s: int(s.split("-")[0]))
+            df = df.sort_values("SEASON_SORT", ascending=False)
+
+            # Limit to last 5 unique seasons
+            recent_seasons = df["SEASON_ID"].unique()[:5]
+            df = df[df["SEASON_ID"].isin(recent_seasons)]
+
+            # Remove aggregate "TOT" rows
+            df = df[df["TEAM_ABBREVIATION"] != "TOT"]
+
+            # Get numeric start_season
+            df["start_season"] = df["SEASON_ID"].apply(lambda s: int(s.split("-")[0]))
+
+            # Group by player and team_id to determine start and end seasons
+            for team_id, group in df.groupby("TEAM_ID"):
+                seasons = sorted(group["start_season"].tolist())
+                all_team_data.append({
+                    "player_id": player_id,
+                    "team_id": int(team_id),
+                    "start_season": seasons[0],
+                    "end_season": seasons[-1]
+                })
+
+            print(f"{i+1}/{len(player_ids)}: Processed player_id {player_id}")
+        except Exception as e:
+            print(f"{i+1}/{len(player_ids)}: Failed for player {player_id}: {e}")
+        time.sleep(0.6)  # Respectful delay between API calls
+
+    pd.DataFrame(all_team_data).to_csv(output_csv, index=False)
+    print(f"Saved cleaned team history to {output_csv}")
 
 if __name__ == "__main__":
-    save_player_team_history()
+    save_cleaned_player_team_history()

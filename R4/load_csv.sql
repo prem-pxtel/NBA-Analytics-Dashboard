@@ -16,4 +16,6 @@
 -- Load PlayerGameStats data
 \COPY PlayerGameStats(player_id, game_id, team_id, points, assists, rebounds, blocks, fga, fgm, fta, ftm) FROM 'data/boxscores.csv' DELIMITER ',' CSV HEADER;
 
+\COPY PlayerSeasonStats FROM 'data/player_season_stats.csv' DELIMITER ',' CSV HEADER;
+
 

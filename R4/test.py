@@ -1,16 +1,23 @@
-import pandas as pd
+import csv
 
-# Load both CSVs
-boxscores_df = pd.read_csv("data/boxscores.csv")
-games_df = pd.read_csv("data/games.csv")
+input_file = "data/player_season_stats.csv"
+output_file = "player_season_stats_deduped.csv"
 
-# Get valid game IDs from games.csv
-valid_game_ids = set(games_df["GAME_ID"].astype(str).unique())
+# Track seen (player_id, season_id) pairs
+seen = set()
 
-# Keep only rows in boxscores.csv where game_id is valid
-filtered_boxscores_df = boxscores_df[boxscores_df["game_id"].astype(str).isin(valid_game_ids)]
+with open(input_file, mode="r", encoding="utf-8") as infile, \
+     open(output_file, mode="w", newline="", encoding="utf-8") as outfile:
 
-# Save the cleaned data
-filtered_boxscores_df.to_csv("boxscores_filtered.csv", index=False)
+    reader = csv.DictReader(infile)
+    fieldnames = reader.fieldnames
+    writer = csv.DictWriter(outfile, fieldnames=fieldnames)
+    writer.writeheader()
 
-print("Filtered boxscores saved to boxscores_filtered.csv.")
+    for row in reader:
+        key = (row["player_id"], row["season_id"])
+        if key not in seen:
+            writer.writerow(row)
+            seen.add(key)
+
+print(f"Duplicates removed. Cleaned file saved to: {output_file}")

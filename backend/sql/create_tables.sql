@@ -20,6 +20,8 @@ CREATE TABLE Player (
     draft_year FLOAT
 );
 
+CREATE INDEX idx_player_name ON Player(player_name);
+
 -- Team table
 CREATE TABLE Team (
     team_id INT PRIMARY KEY,

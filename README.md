@@ -20,6 +20,8 @@ You will need the following installed:
 
 ## 3. Setting Up the Sample Database
 
+Make yourself a psql database with the information in .env and give yourself superuser
+
 ### Clone the Repository
 ```bash
 git clone https://github.com/saileshp56/CS348-Group-Project.git

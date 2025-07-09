@@ -225,9 +225,9 @@ if __name__ == "__main__":
     cursor = db.cursor()
 
     try:
-        run_sql_file(cursor, db, "../sql/create_tables.sql")
+        run_sql_file(cursor, db, "sql/create_tables.sql")
         print("Created tables")
-        run_sql_file(cursor, db, "../sql/sample_data.sql")
+        run_sql_file(cursor, db, "sql/sample_data.sql")
         print("Loaded sample data")
         # run_sql_file(cursor, db, "../R4/load_csv.sql")
         # print("Loaded prod data")

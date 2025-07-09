@@ -64,3 +64,17 @@ JOIN Player p ON pg.player_id = p.player_id
 GROUP BY p.player_name
 ORDER BY total_points DESC
 LIMIT 10;
+
+-- R10: Team Draft History By Year
+-- list of players drafted by that team in the selected season(s)
+SELECT 
+    p.player_name,
+    p.draft_year,
+    p.position,
+    CASE WHEN p.is_active THEN 'Yes' ELSE 'No' END AS active_status
+FROM Player p
+JOIN PlayerTeamHistory pt ON p.player_id = pt.player_id
+JOIN Team t ON pt.team_id = t.team_id
+WHERE t.team_name = 'Golden State Warriors'
+  AND p.draft_year BETWEEN 2000 AND 2010
+ORDER BY p.draft_year;

@@ -227,10 +227,10 @@ if __name__ == "__main__":
     try:
         run_sql_file(cursor, db, "../sql/create_tables.sql")
         print("Created tables")
-        # run_sql_file(cursor, db, "sql/sample_data.sql")
-        # print("Loaded sample data")
-        run_sql_file(cursor, db, "../R4/load_csv.sql")
-        print("Loaded prod data")
+        run_sql_file(cursor, db, "../sql/sample_data.sql")
+        print("Loaded sample data")
+        # run_sql_file(cursor, db, "../R4/load_csv.sql")
+        # print("Loaded prod data")
 
     except Exception as e:
         print(

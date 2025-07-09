@@ -15,9 +15,9 @@ CREATE TABLE Player (
     birth_date DATE,
     position VARCHAR(30),
     is_active BOOLEAN,
-    weight INT,
-    height INT,
-    draft_year INT
+    weight FLOAT,
+    height FLOAT,
+    draft_year FLOAT
 );
 
 -- Team table
@@ -103,7 +103,7 @@ CREATE TABLE PlayerTeamHistory (
     team_id INT,
     start_season INT,
     end_season INT,
-    PRIMARY KEY (player_id, start_season),
+    PRIMARY KEY (player_id, team_id, start_season),
     FOREIGN KEY (player_id) REFERENCES Player(player_id),
     FOREIGN KEY (team_id) REFERENCES Team(team_id)
 );

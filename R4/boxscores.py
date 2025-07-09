@@ -3,7 +3,7 @@ import pandas as pd
 from nba_api.stats.endpoints import leaguegamefinder, boxscoretraditionalv2
 
 def fetch_boxscores(season="2024-25", season_type="Regular Season", delay=0.6, output_file="boxscores.csv"):
-    # Step 1: Get all games from the season
+    # Get all games from the season
     print("Fetching game list...")
     gamefinder = leaguegamefinder.LeagueGameFinder(season_nullable=season, season_type_nullable=season_type)
     games_df = gamefinder.get_data_frames()[0]
@@ -11,7 +11,6 @@ def fetch_boxscores(season="2024-25", season_type="Regular Season", delay=0.6, o
 
     print(f"Found {len(game_ids)} games. Downloading box scores...")
 
-    # Step 2: Initialize output CSV with header from first valid game
     initialized = False
 
     for idx, game_id in enumerate(game_ids, 1):
@@ -19,10 +18,10 @@ def fetch_boxscores(season="2024-25", season_type="Regular Season", delay=0.6, o
             boxscore = boxscoretraditionalv2.BoxScoreTraditionalV2(game_id=game_id)
             stats_df = boxscore.player_stats.get_data_frame()
 
-        # Filter out DNP players (where MIN is NaN or 0)
+        # Filter out DNP players 
             stats_df = stats_df[stats_df["MIN"].notna() & (stats_df["MIN"] != "0")]
 
-        # Select and rename columns to match your SQL table
+        # Select and rename columns to match SQL table
             selected = stats_df[[
                 "PLAYER_ID", "GAME_ID", "TEAM_ID", "PTS", "AST", "REB", "BLK", "FGA", "FGM", "FTA", "FTM"
             ]].copy()

@@ -105,7 +105,7 @@ CREATE TABLE PlayerTeamHistory (
     team_id INT,
     start_season INT,
     end_season INT,
-    PRIMARY KEY (player_id, team_id, start_season),
+    PRIMARY KEY (player_id, start_season, team_id),
     FOREIGN KEY (player_id) REFERENCES Player(player_id),
     FOREIGN KEY (team_id) REFERENCES Team(team_id)
 );

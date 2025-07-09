@@ -34,8 +34,37 @@ npm start
 ```
 ### Terminal 2:
 ```bash
+cd backend/
 python3 main.py
 ```
+
+## 4. Populating the Production Database
+We use the following API package as the source of our production data: https://github.com/swar/nba_api
+
+We use this package to scrape the raw data, using python scripts developed in this milestone:
+- extract_nba_data_p1.py
+- extract_nba_data_p2.py
+- player_team.py
+- boxscores.py
+
+These should be run once, in the order as shown above (if the data has not already been generated), with some time in between to prevent rate limiting. 
+
+Once the data is generated, all we need to do is run create_tables.sql followed by load_csv.sql. This will get the production data populated into our database.
+
+Currently in our frontend, we are creating tables and loading in sample data as shown below.
+
+```sql
+ # In main.py...
+ # ...
+ try:
+	 run_sql_file(cursor, db, "sql/create_tables.sql")
+	 print("Created tables")
+	 run_sql_file(cursor, db, "sql/sample_data.sql")
+	 print("Loaded sample data")
+ # ...
+```
+
+Currently, we are using the sample dataset for comparison with expected output in our report. However, to use the production data instead, we need to simply run load_csv.sql here.
 
 
 

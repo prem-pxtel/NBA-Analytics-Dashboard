@@ -29,40 +29,38 @@ def get_team_logs_with_retry(team_id, season, max_retries=3):
     print(f"Failed for team_id {team_id}")
     return None
 
-def save_games(season, season_id, team_list, seen_games):
+def save_games(last_n_seasons=5):
     all_games = []
-    for team in team_list:
-        logs = get_team_logs_with_retry(team["id"], season)
-        if logs is None:
-            continue
-        for _, row in logs.iterrows():
-            game_id = int(row["Game_ID"])
-            if game_id in seen_games:
-                continue
-            seen_games.add(game_id)
+    current_season = 2024
+    for i in range(last_n_seasons):
+        season = f"{current_season - i}-{str(current_season - i + 1)[-2:]}"
+        print(f"Fetching season {season}")
+        try:
+            finder = leaguegamefinder.LeagueGameFinder(season_nullable=season)
+            df = finder.get_data_frames()[0]
+            all_games.append(df)
+            time.sleep(0.7)
+        except Exception as e:
+            print(f"Failed to fetch season {season}: {e}")
 
-            is_home = "vs." in row["MATCHUP"]
-            opp_abbr = row["MATCHUP"].split(" ")[-1]
-            opp_team_id = next((t["id"] for t in team_list if t["abbreviation"] == opp_abbr), None)
+    df = pd.concat(all_games, ignore_index=True)
 
-            home_team_id = team["id"] if is_home else opp_team_id
-            away_team_id = opp_team_id if is_home else team["id"]
-            home_score = int(row["PTS"]) if is_home else None
-            away_score = int(row["PTS"]) if not is_home else None
+    # Separate into home and away games
+    home_games = df[df["MATCHUP"].str.contains("vs.")]
+    away_games = df[df["MATCHUP"].str.contains("@")]
 
-            all_games.append({
-                "game_id": game_id,
-                "season_id": season_id,
-                "game_date": pd.to_datetime(row["GAME_DATE"]),
-                "home_team_id": home_team_id,
-                "away_team_id": away_team_id,
-                "home_score": home_score,
-                "away_score": away_score
-            })
-        time.sleep(1.5)
+    home_games = home_games[["GAME_ID", "SEASON_ID", "GAME_DATE", "TEAM_ID", "PTS"]]
+    away_games = away_games[["GAME_ID", "TEAM_ID", "PTS"]]
 
-    append_to_csv(pd.DataFrame(all_games), "data/games.csv")
-    print(f"Saved {len(all_games)} games for {season}")
+    home_games = home_games.rename(columns={"TEAM_ID": "home_team_id", "PTS": "home_score"})
+    away_games = away_games.rename(columns={"TEAM_ID": "away_team_id", "PTS": "away_score"})
+
+    games_df = pd.merge(home_games, away_games, on="GAME_ID")
+    games_df = games_df[["GAME_ID", "SEASON_ID", "GAME_DATE", "home_team_id", "away_team_id", "home_score", "away_score"]]
+
+    games_df.to_csv("data/games.csv", index=False)
+    print(" Saved games.csv")
+
 
 def save_random_player_game_stats(players_df, games_df):
     stats = []

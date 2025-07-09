@@ -17,7 +17,6 @@ def save_cleaned_player_team_history():
             career = playercareerstats.PlayerCareerStats(player_id=player_id)
             df = career.get_data_frames()[0]
 
-            # Convert SEASON_ID to numeric start year for sorting
             df["SEASON_SORT"] = df["SEASON_ID"].apply(lambda s: int(s.split("-")[0]))
             df = df.sort_values("SEASON_SORT", ascending=False)
 
@@ -25,7 +24,7 @@ def save_cleaned_player_team_history():
             recent_seasons = df["SEASON_ID"].unique()[:5]
             df = df[df["SEASON_ID"].isin(recent_seasons)]
 
-            # Remove aggregate "TOT" rows
+            # Remove "TOT" rows
             df = df[df["TEAM_ABBREVIATION"] != "TOT"]
 
             # Get numeric start_season
@@ -44,7 +43,7 @@ def save_cleaned_player_team_history():
             print(f"{i+1}/{len(player_ids)}: Processed player_id {player_id}")
         except Exception as e:
             print(f"{i+1}/{len(player_ids)}: Failed for player {player_id}: {e}")
-        time.sleep(0.6)  # Respectful delay between API calls
+        time.sleep(0.6)  
 
     pd.DataFrame(all_team_data).to_csv(output_csv, index=False)
     print(f"Saved cleaned team history to {output_csv}")

@@ -85,24 +85,6 @@ def save_random_player_game_stats(players_df, games_df):
     append_to_csv(pd.DataFrame(stats), "data/boxscores.csv")
     print("Saved boxscores.csv")
 
-def save_random_shots(players_df, games_df):
-    shots = []
-    shot_id_counter = 1
-    for _, game in games_df.sample(min(50, len(games_df))).iterrows():
-        for _, player in players_df.sample(min(10, len(players_df))).iterrows():
-            for _ in range(random.randint(1, 5)):
-                shots.append({
-                    "shot_id": shot_id_counter,
-                    "player_id": player["player_id"],
-                    "game_id": game["game_id"],
-                    "shot_type": random.choice(["2PT", "3PT", "FT"]),
-                    "result": random.choice(["made", "missed"]),
-                    "minutes_remaining": random.randint(0, 11),
-                    "seconds_remaining": random.randint(0, 59)
-                })
-                shot_id_counter += 1
-    append_to_csv(pd.DataFrame(shots), "data/shot.csv")
-    print("Saved shot.csv")
 
 def save_recent_player_seasons(players_df, max_seasons=5):
     all_stats = []
@@ -138,5 +120,4 @@ if __name__ == "__main__":
     games_df = pd.read_csv("data/games.csv")
 
     save_random_player_game_stats(players_df, games_df)
-    save_random_shots(players_df, games_df)
     save_recent_player_seasons(players_df)

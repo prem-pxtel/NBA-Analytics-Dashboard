@@ -43,13 +43,6 @@ INSERT INTO Game VALUES
 (1, 2022, '2022-10-20', 1, 2, 102, 99),
 (2, 2022, '2022-11-01', 3, 1, 120, 110);
 
--- Insert Shots
-INSERT INTO Shot VALUES
-(1, 1, 1, '3PT', 'Made', 2, 15),
-(2, 2, 1, '2PT', 'Missed', 4, 10),
-(3, 3, 2, '3PT', 'Made', 3, 45),
-(4, 1, 2, '2PT', 'Made', 5, 20);
-
 -- Insert PlayerGameStats (includes team_id)
 INSERT INTO PlayerGameStats VALUES
 (1, 1, 1, 29, 7, 8, 1, 22, 10, 5, 4),

@@ -52,32 +52,19 @@ CREATE TABLE Game (
     FOREIGN KEY (away_team_id) REFERENCES Team(team_id)
 );
 
--- Shot table
-CREATE TABLE Shot (
-    shot_id INT PRIMARY KEY,
-    player_id INT,
-    game_id INT,
-    shot_type VARCHAR(10),
-    result VARCHAR(10),
-    minutes_remaining INT,
-    seconds_remaining INT,
-    FOREIGN KEY (player_id) REFERENCES Player(player_id),
-    FOREIGN KEY (game_id) REFERENCES Game(game_id)
-);
-
 -- PlayerGameStats table
 CREATE TABLE PlayerGameStats (
     player_id INT,
     game_id INT,
     team_id INT,
-    points INT,
-    assists INT,
-    rebounds INT,
-    blocks INT,
-    FGA INT,
-    FGM INT,
-    FTA INT,
-    FTM INT,
+    points FLOAT,
+    assists FLOAT,
+    rebounds FLOAT,
+    blocks FLOAT,
+    FGA FLOAT,
+    FGM FLOAT,
+    FTA FLOAT,
+    FTM FLOAT,
     PRIMARY KEY (player_id, game_id),
     FOREIGN KEY (player_id) REFERENCES Player(player_id),
     FOREIGN KEY (game_id) REFERENCES Game(game_id),

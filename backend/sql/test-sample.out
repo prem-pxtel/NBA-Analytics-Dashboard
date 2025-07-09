@@ -19,3 +19,9 @@
  Stephen Curry         |           31
  LeBron James          |           29
 (3 rows)
+
+  player_name  | draft_year | position | active_status 
+---------------+------------+----------+---------------
+ Kevin Durant  |       2007 | SF       | Yes
+ Stephen Curry |       2009 | PG       | Yes
+(2 rows)

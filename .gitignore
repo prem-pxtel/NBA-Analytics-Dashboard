@@ -1,2 +1,4 @@
 node_modules/
 milestone1/
+__pycache__
+*docker*

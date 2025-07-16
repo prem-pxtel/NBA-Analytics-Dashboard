@@ -1,39 +1,13 @@
 import os
-import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from db import get_db_connection, db_init
 
 load_dotenv()
 
-
 app = Flask(__name__)
 CORS(app)
-
-
-def get_db_connection():
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PWD")
-    )
-
-
-def run_sql_file(cursor, db, path: str):
-    with open(path, 'r') as sql_file:
-        sql = sql_file.read()
-        cursor.execute(sql)
-        db.commit()
-
-
-def load_query(path: str):
-    with open(path, 'r') as file:
-        sql = file.read()
-
-    return [q.strip() for q in sql.split(';') if q.strip()]
-
 
 # R6
 @app.route("/api/player/season_stats", methods=["GET"])
@@ -219,24 +193,7 @@ def top_10():
 
 
 if __name__ == "__main__":
-    # init db
-    print("Initializing database...")
-    db = get_db_connection()
-    cursor = db.cursor()
-
-    try:
-        run_sql_file(cursor, db, "sql/create_tables.sql")
-        print("Created tables")
-        run_sql_file(cursor, db, "sql/sample_data.sql")
-        print("Loaded sample data")
-        # run_sql_file(cursor, db, "../R4/load_csv.sql")
-        # print("Loaded prod data")
-
-    except Exception as e:
-        print(
-            f"Database initialization error (might already be initialized): {e}")
-    finally:
-        db.close()
+    db_init() 
 
     app.run(host=os.getenv("FLASK_RUN_HOST"),
             port=os.getenv("FLASK_RUN_PORT"), debug=True)

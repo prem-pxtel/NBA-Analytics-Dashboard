@@ -2,15 +2,43 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt, verify_jwt_in_request
+from flask_bcrypt import Bcrypt
 from db import get_db_connection, db_init
+from auth import auth_bp
 
 load_dotenv()
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 CORS(app)
+
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+jwt = JWTManager(app)
+
+app.register_blueprint(auth_bp)
+
+
+def admin_required():
+    def wrapper(fn):
+        @jwt_required()
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            claims = get_jwt()
+            if claims["role"] == "admin":
+                return fn(*args, **kwargs)
+            else:
+                return jsonify({"error": "You don't have permission"}), 403
+
+        return decorator
+    return wrapper
+
+
+# ---- App endpoints ----
 
 # R6
 @app.route("/api/player/season_stats", methods=["GET"])
+@jwt_required
 def season_stats():
     player_name = request.args.get("player_name")
     if not player_name:
@@ -44,6 +72,7 @@ def season_stats():
 
 # R7
 @app.route("/api/player/game_stats", methods=["GET"])
+@jwt_required
 def game_stats():
     player_name = request.args.get("player_name")
     if not player_name:
@@ -79,6 +108,7 @@ def game_stats():
 
 
 @app.route("/api/player/game_stats/by_date", methods=["GET"])
+@jwt_required
 def game_stats_for_date():
     player_name = request.args.get("player_name")
     date = request.args.get("date")
@@ -120,6 +150,7 @@ def game_stats_for_date():
 
 # R8
 @app.route("/api/player/game_stats/by_stat", methods=["GET"])
+@jwt_required
 def best_game_by_stat():
     player_name = request.args.get("player_name")
     stat = request.args.get("stat")
@@ -192,8 +223,58 @@ def top_10():
     return jsonify([dict(zip(keys, row)) for row in results])
 
 
+# ---- Admin only ----
+@app.route("/api/player", methods=["POST"])
+@admin_required()
+def add_player():
+    data = request.get_json()
+    player_id = data.get("player_id")
+    player_name = data.get("player_name")
+    birth_date = data.get("birth_date")
+    position = data.get("position")
+    is_active = data.get("is_active", True)
+    weight = data.get("weight")
+    height = data.get("height")
+    draft_year = data.get("draft_year")
+
+    if not player_id or not player_name:
+        return jsonify({"error": "Missing player_id or player_name"}), 400
+
+    query = f"""
+    INSERT INTO Player
+    VALUES ({player_id}, {player_name}, {birth_date}, {position}, {is_active}, {weight}, {height}, {draft_year})
+    """
+
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute(query)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "Player added successfully"}), 201
+
+
+@app.route("/api/player", methods=["POST"])
+@admin_required()
+def delete_player():
+    data = request.get_json()
+    player_id = data.get("player_id")
+
+    query = f"DELETE FROM Player WHERE player_id = {player_id}"
+
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute(query)
+    db.commit()
+    db.close()
+
+    if cur.rowcount == 0:
+        return jsonify({"error": "Player not found"}), 404
+    return jsonify({"message": "Player deleted successfully"}), 200
+
+
 if __name__ == "__main__":
-    db_init() 
+    db_init()
 
     app.run(host=os.getenv("FLASK_RUN_HOST"),
             port=os.getenv("FLASK_RUN_PORT"), debug=True)

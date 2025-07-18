@@ -61,3 +61,8 @@ def db_init():
             f"Database initialization error (might already be initialized): {e}")
     finally:
         db.close()
+
+
+if __name__ == '__main__':
+    db_init()
+    print("Database initialized and tables created.")

@@ -3,3 +3,5 @@ flask-cors
 python-dotenv
 psycopg2-binary
 watchdog
+flask-bcrypt
+flask-jwt-extended

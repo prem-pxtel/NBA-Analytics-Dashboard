@@ -1,8 +1,6 @@
-import os
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
+from flask_jwt_extended import create_access_token, jwt_required, verify_jwt_in_request, get_jwt
 from db import get_db_connection
-from flask_jwt_extended import create_access_token
-from main import bcrypt
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -16,7 +14,7 @@ def register():
 
     if not username or not pwd:
         return jsonify({"error": "Missing username or password"}), 400
-    pwd_hash = bcrypt.generate_password_hash(pwd).decode('utf-8')
+    pwd_hash = current_app.bcrypt.generate_password_hash(pwd).decode('utf-8')
     add_user_query = f"""
         INSERT INTO User (username, password_hash, role) 
         VALUES ({username}, {pwd_hash}, {role}) 
@@ -53,10 +51,25 @@ def login():
 
     if user:
         user_id, pwd_hash = user
-        if bcrypt.check_password_hash(pwd_hash, pwd_raw):
+        if current_app.bcrypt.check_password_hash(pwd_hash, pwd_raw):
             access_token = create_access_token(identity=user_id)
             return jsonify(access_token=access_token), 200
         else:
             return jsonify({"error": "Wrong password"}), 401
     return jsonify({"error": "No such user found"}), 401
+
+
+def admin_required():
+    def wrapper(fn):
+        @jwt_required()
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            claims = get_jwt()
+            if claims["role"] == "admin":
+                return fn(*args, **kwargs)
+            else:
+                return jsonify({"error": "You don't have permission"}), 403
+
+        return decorator
+    return wrapper
 

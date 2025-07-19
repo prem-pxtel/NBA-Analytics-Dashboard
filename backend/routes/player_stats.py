@@ -6,7 +6,7 @@ player_stats_bp = Blueprint('player_stats', __name__, url_prefix='/api/player')
 
 # R6
 @player_stats_bp.route("/season_stats", methods=["GET"])
-@jwt_required
+@jwt_required()
 def season_stats():
     player_name = request.args.get("player_name")
     if not player_name:
@@ -40,7 +40,7 @@ def season_stats():
 
 # R7
 @player_stats_bp.route("/game_stats", methods=["GET"])
-@jwt_required
+@jwt_required()
 def game_stats():
     player_name = request.args.get("player_name")
     if not player_name:
@@ -76,7 +76,7 @@ def game_stats():
 
 
 @player_stats_bp.route("/game_stats/by_date", methods=["GET"])
-@jwt_required
+@jwt_required()
 def game_stats_for_date():
     player_name = request.args.get("player_name")
     date = request.args.get("date")
@@ -118,7 +118,7 @@ def game_stats_for_date():
 
 # R8
 @player_stats_bp.route("/game_stats/by_stat", methods=["GET"])
-@jwt_required
+@jwt_required()
 def best_game_by_stat():
     player_name = request.args.get("player_name")
     stat = request.args.get("stat")
@@ -163,7 +163,7 @@ def best_game_by_stat():
 
 # R9
 @player_stats_bp.route("/top10", methods=["GET"])
-@jwt_required
+@jwt_required()
 def top_10():
     stat = request.args.get("stat")
 
@@ -193,7 +193,7 @@ def top_10():
 
 # advanced feature 2
 @player_stats_bp.route("/recent_game_stats", methods=["GET"])
-@jwt_required
+@jwt_required()
 def recent_game_stats():
     player_name = request.args.get("player_name")
 

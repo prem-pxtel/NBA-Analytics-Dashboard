@@ -56,6 +56,8 @@ def db_init():
         load_prod_data(cursor, db)
         print("Loaded prod data")
 
+        run_sql_file(cursor, db, "sql/auth_schema.sql")
+
     except Exception as e:
         print(
             f"Database initialization error (might already be initialized): {e}")

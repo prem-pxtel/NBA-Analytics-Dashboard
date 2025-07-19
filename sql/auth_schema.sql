@@ -1,8 +1,10 @@
-CREATE TABLE IF NOT EXISTS Users (
-    user_id SERIAL PRIMARY KEY, -- SERIAL assigns sequential values automatically
+DROP TABLE IF EXISTS Users;
+
+CREATE TABLE Users (
+    user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     pwd_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL DEFAULT 'viewer' -- 'admin' or 'viewer'
+    user_role VARCHAR(50) CHECK (user_role IN ('admin', 'viewer')) NOT NULL DEFAULT 'viewer' 
 );
 
-CREATE UNIQUE INDEX idx_username ON "User" (username);
+CREATE UNIQUE INDEX idx_username ON Users(username);

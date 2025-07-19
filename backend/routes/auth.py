@@ -15,15 +15,16 @@ def register():
     if not username or not pwd:
         return jsonify({"error": "Missing username or password"}), 400
     pwd_hash = current_app.bcrypt.generate_password_hash(pwd).decode('utf-8')
-    add_user_query = f"""
+    
+    query = """
         INSERT INTO User (username, password_hash, role) 
-        VALUES ({username}, {pwd_hash}, {role}) 
+        VALUES (%s, %s, %s); 
     """
 
     db = get_db_connection()
     cur = db.cursor()
     try:
-        cur.execute(add_user_query)
+        cur.execute(query, (username, pwd_hash, role))
         db.commit()
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
@@ -33,7 +34,7 @@ def register():
         db.close()
 
 
-@auth_bp.route("/api/login", methods=["POST"])
+@auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
     username = data.get("username")
@@ -41,11 +42,16 @@ def login():
 
     if not username or not pwd_raw:
         return jsonify({"error": "Missing username or password"}), 400
+    
+    query = """
+        SELECT user_id, pwd_hash
+        FROM User
+        WHERE username = %s;
+    """
 
     db = get_db_connection()
     cur = db.cursor()
-    cur.execute(
-        f"SELECT user_id, password_hash FROM User WHERE username = {username}'")
+    cur.execute(query, (username,))
     user = cur.fetchone()
     db.close()
 

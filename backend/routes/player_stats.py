@@ -82,7 +82,7 @@ def game_stats_for_date():
     date = request.args.get("date")
 
     if not player_name or not date:
-        return jsonify({"error": "Missing parameters"}), 400
+        return jsonify({"error": "Missing parameter"}), 400
 
     query = """
     SELECT 
@@ -163,6 +163,7 @@ def best_game_by_stat():
 
 # R9
 @player_stats_bp.route("/top10", methods=["GET"])
+@jwt_required
 def top_10():
     stat = request.args.get("stat")
 
@@ -188,4 +189,29 @@ def top_10():
     db.close()
 
     keys = ["player_name", f"total_{stat}"]
+    return jsonify([dict(zip(keys, row)) for row in results])
+
+# advanced feature 2
+@player_stats_bp.route("/recent_game_stats", methods=["GET"])
+@jwt_required
+def recent_game_stats():
+    player_name = request.args.get("player_name")
+
+    if not player_name:
+        return jsonify({"error": "Missing parameter"}), 400
+    
+    # TODO: change to actual query
+    query = """
+    SELECT player_name
+    FROM Player
+    LIMIT 10;
+    """
+
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute(query)
+    results = cur.fetchall()
+    db.close()
+
+    keys = ["player_name"]
     return jsonify([dict(zip(keys, row)) for row in results])

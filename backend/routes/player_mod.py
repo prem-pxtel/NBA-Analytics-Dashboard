@@ -1,2 +1,0 @@
-# admin only features
-

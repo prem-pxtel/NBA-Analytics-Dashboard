@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from db import get_db_connection
+from utils import admin_required
 
 player_stats_bp = Blueprint('player_stats', __name__, url_prefix='/api/player')
 
@@ -87,10 +88,10 @@ def game_stats_for_date():
     query = """
     SELECT 
         g.game_date AS date,
-    CASE
-        WHEN pg.team_id = g.home_team_id THEN away.team_name
-        ELSE home.team_name
-    END AS opponent,
+        CASE
+            WHEN pg.team_id = g.home_team_id THEN away.team_name
+            ELSE home.team_name
+        END AS opponent,
         pg.points,
         pg.assists,
         pg.rebounds,
@@ -191,7 +192,8 @@ def top_10():
     keys = ["player_name", f"total_{stat}"]
     return jsonify([dict(zip(keys, row)) for row in results])
 
-# advanced feature 2
+
+# advanced feature 2 - most recent game for a player
 @player_stats_bp.route("/recent_game_stats", methods=["GET"])
 @jwt_required()
 def recent_game_stats():
@@ -200,18 +202,90 @@ def recent_game_stats():
     if not player_name:
         return jsonify({"error": "Missing parameter"}), 400
     
-    # TODO: change to actual query
     query = """
-    SELECT player_name
-    FROM Player
-    LIMIT 10;
+    SELECT 
+        date,
+        opponent,
+        points,
+        assists,
+        rebounds,
+        blocks 
+    FROM MostRecentGame
+    WHERE player_name ILIKE %s
     """
 
     db = get_db_connection()
     cur = db.cursor()
-    cur.execute(query)
-    results = cur.fetchall()
+    cur.execute(query, (player_name,))
+    result = cur.fetchone()
     db.close()
 
+    if not result:
+        return jsonify({"message": "No data found"}), 404
+    
     keys = ["player_name"]
-    return jsonify([dict(zip(keys, row)) for row in results])
+    return jsonify(dict(zip(keys, result)))
+
+
+# advanced feature 3 - updating PlayerGameStats
+@player_stats_bp.route("/update_gamestats", methods=["GET"])
+@admin_required
+def update_game_stats():
+    player_name = request.args.get("player_name")
+    game_id = request.args.get("game_id")
+    team_id = request.args.get("team_id")
+    points = request.args.get("points")
+    assists = request.args.get("assists")
+    rebounds = request.args.get("rebounds")
+    blocks = request.args.get("blocks")
+    FGA = request.args.get("FGA")
+    FGM = request.args.get("FGM")
+    FTA = request.args.get("FTA")
+    FTM = request.args.get("FTM")
+
+    if not player_name or not game_id:
+        return jsonify({"error": "Missing player_name or game_id"}), 400
+    
+    db = get_db_connection()
+    cur = db.cursor()
+    
+
+    # Get player_id from player_name
+    get_player_id_query = """
+        SELECT player_id
+        FROM Player
+        WHERE player_name ILIKE %s
+    """
+
+    cur.execute(get_player_id_query, (player_name))
+    player = cur.fetchone()
+    if not player:
+        return jsonify({"error": "Player not found"}), 404
+    player_id = player[0]
+
+    # Update table
+    update_query = """
+    UPDATE PlayerGameStats
+    SET 
+        team_id = %s,
+        points = %s,
+        assists = %s,
+        rebounds = %s,
+        blocks = %s,
+        FGA = %s,
+        FGM = %s,
+        FTA = %s,
+        FTM = %s
+    WHERE player_id = %s AND game_id = %s;
+    """
+
+    cur.execute(update_query, (team_id, points, assists, rebounds, blocks, FGA, FGM, FTA, FTM, player_id, game_id))
+    if cur.rowcount == 0:
+            return jsonify({"error": "Player stats not found for this game"}), 404
+        
+    db.commit()
+    db.close()
+    
+    return jsonify({"message": "Player game stats updated successfully"}), 200
+
+

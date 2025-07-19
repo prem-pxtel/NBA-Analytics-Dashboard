@@ -1,3 +1,4 @@
+import os
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import create_access_token
 
@@ -11,20 +12,25 @@ def register():
     data = request.get_json()
     username = data.get("username")
     pwd = data.get("password")
+    invite_code = data.get("invite_code")
+    role = "viewer"
 
     if not username or not pwd:
         return jsonify({"error": "Missing username or password"}), 400
     pwd_hash = current_app.bcrypt.generate_password_hash(pwd).decode('utf-8')
+
+    if invite_code == os.getenv("ADMIN_INVITE_CODE"):
+        role = "admin"
     
     query = """
-        INSERT INTO Users (username, pwd_hash)
-        VALUES (%s, %s); 
+        INSERT INTO Users (username, pwd_hash, role)
+        VALUES (%s, %s, %s); 
     """
 
     db = get_db_connection()
     cur = db.cursor()
     try:
-        cur.execute(query, (username, pwd_hash))
+        cur.execute(query, (username, pwd_hash, role))
         db.commit()
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:

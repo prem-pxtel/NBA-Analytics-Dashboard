@@ -13,3 +13,4 @@ def admin_required(fn):
         else:
             return jsonify({"error": "You don't have permission"}), 403
     return decorator
+

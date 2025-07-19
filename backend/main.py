@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 from flask import Flask 
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -17,6 +18,7 @@ def create_app():
     CORS(app)
 
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
     jwt = JWTManager(app)
 
     @jwt.additional_claims_loader

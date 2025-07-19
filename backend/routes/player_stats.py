@@ -228,27 +228,25 @@ def recent_game_stats():
 
 
 # advanced feature 3 - updating PlayerGameStats
-@player_stats_bp.route("/update_gamestats", methods=["GET"])
+@player_stats_bp.route("/update_game_stats", methods=["POST"])
 @admin_required
 def update_game_stats():
-    player_name = request.args.get("player_name")
-    game_id = request.args.get("game_id")
-    team_id = request.args.get("team_id")
-    points = request.args.get("points")
-    assists = request.args.get("assists")
-    rebounds = request.args.get("rebounds")
-    blocks = request.args.get("blocks")
-    FGA = request.args.get("FGA")
-    FGM = request.args.get("FGM")
-    FTA = request.args.get("FTA")
-    FTM = request.args.get("FTM")
+    data = request.get_json()
+
+    player_name = data.get("player_name")
+    game_id = data.get("game_id")
 
     if not player_name or not game_id:
         return jsonify({"error": "Missing player_name or game_id"}), 400
     
+    columns = ["points", "assists", "rebounds", "blocks", "FGA", "FGM", "FTA", "FTM"]
+    update_cols = {k: v for k, v in data.items() if k in columns and v is not None}
+    if not update_cols:
+        return jsonify({"error": "No fields to update"})
+
+
     db = get_db_connection()
-    cur = db.cursor()
-    
+    cur = db.cursor()    
 
     # Get player_id from player_name
     get_player_id_query = """
@@ -264,28 +262,25 @@ def update_game_stats():
     player_id = player[0]
 
     # Update table
+    set_clause = ""
+    values = []
+    for col, val in update_cols.items():
+        set_clause += (f"{col} = %s\n")
+        values.append(val)
+
     update_query = """
     UPDATE PlayerGameStats
-    SET 
-        team_id = %s,
-        points = %s,
-        assists = %s,
-        rebounds = %s,
-        blocks = %s,
-        FGA = %s,
-        FGM = %s,
-        FTA = %s,
-        FTM = %s
+    SET {set_clause}
     WHERE player_id = %s AND game_id = %s;
     """
 
-    cur.execute(update_query, (team_id, points, assists, rebounds, blocks, FGA, FGM, FTA, FTM, player_id, game_id))
+    cur.execute(update_query, tuple())
     if cur.rowcount == 0:
             return jsonify({"error": "Player stats not found for this game"}), 404
         
     db.commit()
     db.close()
-    
+
     return jsonify({"message": "Player game stats updated successfully"}), 200
 
 

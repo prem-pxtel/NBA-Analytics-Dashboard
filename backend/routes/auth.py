@@ -1,8 +1,9 @@
 import os
 from flask import Blueprint, request, jsonify, current_app
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 
 from db import get_db_connection
+from utils import admin_required
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -13,7 +14,6 @@ def register():
     username = data.get("username")
     pwd = data.get("password")
     invite_code = data.get("invite_code")
-    role = "viewer"
 
     if not username or not pwd:
         return jsonify({"error": "Missing username or password"}), 400
@@ -21,9 +21,14 @@ def register():
 
     if invite_code == os.getenv("ADMIN_INVITE_CODE"):
         role = "admin"
+    else:
+        role = "viewer"
+
+    print(os.getenv("ADMIN_INVITE_CODE"))
+    print(invite_code)
     
     query = """
-        INSERT INTO Users (username, pwd_hash, role)
+        INSERT INTO Users (username, pwd_hash, user_role)
         VALUES (%s, %s, %s); 
     """
 
@@ -32,7 +37,7 @@ def register():
     try:
         cur.execute(query, (username, pwd_hash, role))
         db.commit()
-        return jsonify({"message": "User registered successfully"}), 201
+        return jsonify({"message": "User registered successfully", "role":role}), 201
     except Exception as e:
         db.rollback()
         return jsonify({"error": str(e)}), 400
@@ -71,3 +76,26 @@ def login():
         else:
             return jsonify({"error": "Wrong password"}), 401
     return jsonify({"error": "No such user found"}), 401
+
+# for debugging
+@auth_bp.route("/whoami", methods=["GET"])
+@jwt_required()
+def whoami():
+    from flask_jwt_extended import get_jwt_identity, get_jwt
+    return jsonify({
+        "user_id": get_jwt_identity(),
+        "role": get_jwt().get("role")
+    })
+
+
+@auth_bp.route("/view_users", methods=["GET"])
+@admin_required
+def get_all_users():
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute("SELECT user_id, username, user_role FROM Users")
+    rows = cur.fetchall()
+    db.close()
+
+    users = [{"user_id": row[0], "username": row[1], "role": row[2]} for row in rows]
+    return jsonify(users)

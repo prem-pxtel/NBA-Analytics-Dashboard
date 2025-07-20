@@ -6,6 +6,8 @@ import PlayersList from './components/PlayersList';
 import PlayerGameList from './components/PlayerGameList';
 import BestGame from './components/BestGame';
 import TopPlayers from './components/TopPlayers';
+import MostRecent from './components/MostRecent';
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -68,6 +70,7 @@ function App() {
       {searchTerm && <PlayersList searchTerm={searchTerm} handleSelectPlayer={handleSelectPlayer} />}
       {selectedPlayer && <PlayerGameList selectedPlayer={selectedPlayer}/>}
       {selectedPlayer && <BestGame selectedPlayer={selectedPlayer}/>}
+      {selectedPlayer && <MostRecent selectedPlayer={selectedPlayer}/>}
       <TopPlayers />
     </div>
   );

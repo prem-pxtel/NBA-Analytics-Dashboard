@@ -204,7 +204,6 @@ def recent_game_stats():
     
     query = """
     SELECT 
-        date,
         opponent,
         points,
         assists,
@@ -223,7 +222,7 @@ def recent_game_stats():
     if not result:
         return jsonify({"message": "No data found"}), 404
     
-    keys = ["player_name"]
+    keys = ["opponent", "points", "assists", "rebounds", "blocks"]
     return jsonify(dict(zip(keys, result)))
 
 

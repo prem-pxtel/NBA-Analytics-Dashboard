@@ -199,9 +199,9 @@ def top_10():
 def draft_by_team():
     team_name = request.args.get("team_name")
     start_year = request.args.get("start_year")
-    end_year = request.ags.get("end_year")
+    end_year = request.args.get("end_year")
 
-    if not all(team_name, start_year, end_year):
+    if not all([team_name, start_year, end_year]):
         return jsonify({"error": "Missing parameter"}), 400
     
     query = """
@@ -224,7 +224,7 @@ def draft_by_team():
     results = cur.fetchall()
     db.close() 
 
-    keys = ["team_name", "start_year", "end_year"]
+    keys = ["player_name", "draft_year", "position", "active_status"]
     return jsonify([dict(zip(keys, row)) for row in results])
 
 

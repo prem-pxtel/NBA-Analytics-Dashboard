@@ -9,6 +9,9 @@ import TopPlayers from './components/TopPlayers';
 import MostRecent from './components/MostRecent';
 import EditStatsForm from './components/EditStatsForm';
 import UserList from './components/UserList';
+import DraftByTeam from './components/DraftByTeam';
+
+
 
 
 
@@ -87,6 +90,8 @@ function App() {
       {selectedPlayer && <MostRecent selectedPlayer={selectedPlayer} />}
 
       {selectedPlayer && <EditStatsForm selectedPlayer={selectedPlayer} />}
+      <DraftByTeam />
+
 
       
         <UserList />

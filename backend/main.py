@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
-from flask import Flask 
+from flask import Flask,jsonify 
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
@@ -31,9 +31,20 @@ def create_app():
             role = cur.fetchone()[0]
             db.close()
             return {"role": role}
+    @app.route("/debug/players")
+    def debug_players():
+        db = get_db_connection()
+        cur = db.cursor()
+        cur.execute("SELECT player_id, player_name FROM Player LIMIT 5;")
+        rows = cur.fetchall()
+        db.close()
+        return jsonify(rows)
+
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(player_stats_bp)
+
+    
 
     return app
 

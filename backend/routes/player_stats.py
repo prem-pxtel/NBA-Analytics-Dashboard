@@ -30,8 +30,9 @@ def season_stats():
 
     db = get_db_connection()
     cur = db.cursor()
-    cur.execute(query, (player_name,))
+    cur.execute(query, (f"%{player_name}%",))
     results = cur.fetchall()
+    print(f"Found {len(results)} rows for '{player_name}'")
     db.close()
 
     keys = ["player_name", "season_id", "team_name", "points_per_game",

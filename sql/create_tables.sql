@@ -148,6 +148,9 @@ WHERE (pg.player_id, g.game_date) IN (
 
 
 --- ========== TRIGGERS ==========
+DROP FUNCTION IF EXISTS AuditPlayerGameStatsUpdate() CASCADE;
+
+
 CREATE FUNCTION AuditPlayerGameStatsUpdate()
     RETURNS trigger AS $$
     BEGIN

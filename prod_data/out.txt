@@ -1,0 +1,69 @@
+ player_name  |  season_type   |     team_name      | points_per_game | assists_per_game | rebounds_per_game | blocks_per_game 
+--------------+----------------+--------------------+-----------------+------------------+-------------------+-----------------
+ LeBron James | Regular Season | Los Angeles Lakers |           30.27 |             6.23 |               8.2 |            1.05
+(1 row)
+
+    date    |        opponent        | points | assists | rebounds | blocks 
+------------+------------------------+--------+---------+----------+--------
+ 2025-04-09 | San Antonio Spurs      |     30 |       3 |        8 |      0
+ 2025-04-08 | Phoenix Suns           |     25 |       6 |        9 |      1
+ 2025-04-06 | Houston Rockets        |      3 |       8 |        2 |      0
+ 2025-04-04 | Denver Nuggets         |     36 |       5 |        2 |      0
+ 2025-04-03 | Los Angeles Lakers     |     37 |       6 |        3 |      0
+ 2025-04-01 | Memphis Grizzlies      |     52 |       8 |       10 |      1
+ 2025-03-30 | San Antonio Spurs      |     13 |       6 |        3 |      1
+ 2025-03-28 | New Orleans Pelicans   |     23 |       6 |        4 |      0
+ 2025-03-20 | Toronto Raptors        |     17 |       1 |        2 |      1
+ 2025-03-17 | Denver Nuggets         |     20 |       7 |        4 |      0
+ 2025-03-15 | New York Knicks        |     28 |       5 |        7 |      1
+ 2025-03-13 | Sacramento Kings       |     11 |       5 |        2 |      1
+ 2025-03-10 | Portland Trail Blazers |     24 |       3 |        2 |      0
+ 2025-03-08 | Detroit Pistons        |     32 |       4 |        3 |      0
+ 2025-03-06 | Brooklyn Nets          |     40 |       4 |        4 |      0
+ 2025-03-04 | New York Knicks        |     28 |       9 |        7 |      0
+ 2025-03-03 | Charlotte Hornets      |     21 |      10 |        3 |      1
+ 2025-03-01 | Philadelphia 76ers     |     29 |      13 |        5 |      0
+ 2025-02-27 | Orlando Magic          |     56 |       3 |        4 |      0
+ 2025-02-25 | Charlotte Hornets      |     15 |       6 |        4 |      0
+ 2025-02-23 | Dallas Mavericks       |     30 |       7 |        4 |      0
+ 2025-02-21 | Sacramento Kings       |     20 |       6 |        1 |      0
+ 2025-02-13 | Houston Rockets        |     27 |       3 |        5 |      0
+ 2025-02-12 | Dallas Mavericks       |     25 |       8 |        5 |      0
+ 2025-02-10 | Milwaukee Bucks        |     38 |       4 |        6 |      0
+ 2025-02-08 | Chicago Bulls          |     34 |       6 |        4 |      1
+ 2025-02-06 | Los Angeles Lakers     |     37 |       4 |        7 |      1
+ 2025-02-05 | Utah Jazz              |     32 |       7 |        1 |      1
+ 2025-02-03 | Orlando Magic          |     24 |       5 |        1 |      0
+ 2025-01-31 | Phoenix Suns           |     14 |       3 |        3 |      2
+ 2025-01-29 | Oklahoma City Thunder  |     21 |       4 |        1 |      0
+ 2025-01-25 | Los Angeles Lakers     |     13 |       9 |        1 |      0
+ 2025-01-23 | Chicago Bulls          |     21 |       7 |        4 |      0
+ 2025-01-22 | Sacramento Kings       |     14 |      12 |        3 |      0
+ 2025-01-20 | Boston Celtics         |     18 |       4 |        3 |      0
+(35 rows)
+
+    date    |        opponent        | points | assists | rebounds | blocks 
+------------+------------------------+--------+---------+----------+--------
+ 2025-01-28 | Portland Trail Blazers |     39 |       5 |       12 |      0
+(1 row)
+
+       player_name       | total_points 
+-------------------------+--------------
+ Shai Gilgeous-Alexander |         1193
+ Anthony Edwards         |          983
+ Devin Booker            |          962
+ Nikola Jokić            |          942
+ Paolo Banchero          |          939
+ Stephen Curry           |          908
+ James Harden            |          904
+ Trae Young              |          899
+ DeMar DeRozan           |          889
+ Giannis Antetokounmpo   |          874
+(10 rows)
+
+  player_name  | draft_year | position | active_status 
+---------------+------------+----------+---------------
+ Chris Paul    |       2005 | Guard    | No
+ Stephen Curry |       2009 | Guard    | No
+(2 rows)
+

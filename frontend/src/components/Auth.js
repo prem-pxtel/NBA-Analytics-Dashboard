@@ -21,21 +21,20 @@ function Auth({ onLogin }) {
         },
         body: JSON.stringify(body)
       });
-
+    
       const responseData = await response.json();
-
-      if (response.ok) {
-        if (isLogin || true) {
-          localStorage.setItem('access_token', responseData.access_token);
-          onLogin(responseData.access_token);
-        } else {
-          setIsLogin(true);
-        }
+      console.log("responseData:", responseData);
+    
+      if (response.ok && responseData.access_token) {
+        localStorage.setItem('access_token', responseData.access_token);
+        onLogin(responseData.access_token);
+      } else {
+        alert(responseData.error || "Login failed");
       }
     } catch (err) {
-      alert("An error occured, try again later")
-      console.log(err)
-    }
+      alert("An error occurred, try again later");
+      console.log(err);
+    }    
   };
 
   return (

@@ -6,6 +6,7 @@ const PlayersList = ({searchTerm, handleSelectPlayer}) => {
     useEffect(() => {
         if (searchTerm) {
             const token = localStorage.getItem('access_token');
+            console.log("Sending token:", token);
             
             fetch(`http://localhost:8000/api/player/season_stats?player_name=${encodeURIComponent(searchTerm)}`, {
                 headers: {

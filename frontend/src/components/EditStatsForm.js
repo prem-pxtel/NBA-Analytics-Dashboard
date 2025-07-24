@@ -9,10 +9,13 @@ function EditStatsForm({ selectedPlayer }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
+  console.log("HELOOO")
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setMessage('');
+
 
     try {
       const token = localStorage.getItem('access_token');
@@ -43,7 +46,6 @@ function EditStatsForm({ selectedPlayer }) {
 
     } catch (err) {
       console.warn('User is likely not an admin or update failed silently.');
-      // You can optionally show a message to admin-only users here
     } finally {
       setIsSubmitting(false);
     }
@@ -51,6 +53,7 @@ function EditStatsForm({ selectedPlayer }) {
 
   return (
     <div style={{ marginTop: '20px' }}>
+      HIII
       <h2>Edit Player Stats (Admin Only)</h2>
       <form onSubmit={handleSubmit}>
         <input

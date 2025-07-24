@@ -21,6 +21,7 @@ function UserList() {
     };
 
     const role = localStorage.getItem("role");
+    console.log("meow", role)
     if (role === "admin") {
       fetchUsers();
     }

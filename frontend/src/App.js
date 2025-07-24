@@ -12,6 +12,7 @@ import UserList from './components/UserList';
 import DraftByTeam from './components/DraftByTeam';
 
 
+import PlayerGameListByDate from './components/PlayerGameListByDate';
 
 
 
@@ -88,13 +89,10 @@ function App() {
       {selectedPlayer && <PlayerGameList selectedPlayer={selectedPlayer} onSelectGame={handleSelectGame} />}
       {selectedPlayer && <BestGame selectedPlayer={selectedPlayer} />}
       {selectedPlayer && <MostRecent selectedPlayer={selectedPlayer} />}
-
+      {selectedPlayer && <PlayerGameListByDate selectedPlayer={selectedPlayer}/>}
       {selectedPlayer && <EditStatsForm selectedPlayer={selectedPlayer} />}
       <DraftByTeam />
-
-
-      
-        <UserList />
+        {/* <UserList /> */}
       
 
       <TopPlayers />

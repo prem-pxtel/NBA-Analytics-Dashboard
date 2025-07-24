@@ -1,7 +1,14 @@
 import psycopg2
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 def get_db_connection():
+    # host=os.getenv("DB_HOST"),
+    #     port=os.getenv("DB_PORT"),
+    #     database=os.getenv("DB_NAME"),
+    #     user=os.getenv("DB_USER"),
+    #     password=os.getenv("DB_PWD")
     return psycopg2.connect(
         host=os.getenv("DB_HOST"),
         port=os.getenv("DB_PORT"),
@@ -9,6 +16,7 @@ def get_db_connection():
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PWD")
     )
+    
 
 
 def run_sql_file(cursor, db, path: str):
@@ -32,13 +40,13 @@ def load_csv(cursor, db, table, csv_path):
 
 
 def load_prod_data(cursor, db):
-    load_csv(cursor, db, "Player", "prod_data/data/players.csv")
-    load_csv(cursor, db, "Team", "prod_data/data/teams.csv")
-    load_csv(cursor, db, "Season", "prod_data/data/seasons.csv")
-    load_csv(cursor, db, "PlayerTeamHistory", "prod_data/data/player_team_history.csv")
-    load_csv(cursor, db, "Game", "prod_data/data/games.csv")
-    load_csv(cursor, db, "PlayerGameStats", "prod_data/data/boxscores.csv")
-    load_csv(cursor, db, "PlayerSeasonStats", "prod_data/data/player_season_stats.csv")
+    load_csv(cursor, db, "Player", "../prod_data/data/players.csv")
+    load_csv(cursor, db, "Team", "../prod_data/data/teams.csv")
+    load_csv(cursor, db, "Season", "../prod_data/data/seasons.csv")
+    load_csv(cursor, db, "PlayerTeamHistory", "../prod_data/data/player_team_history.csv")
+    load_csv(cursor, db, "Game", "../prod_data/data/games.csv")
+    load_csv(cursor, db, "PlayerGameStats", "../prod_data/data/boxscores.csv")
+    load_csv(cursor, db, "PlayerSeasonStats", "../prod_data/data/player_season_stats.csv")
 
 
 def db_init():
@@ -47,7 +55,7 @@ def db_init():
     cursor = db.cursor()
 
     try:
-        run_sql_file(cursor, db, "sql/create_tables.sql")
+        run_sql_file(cursor, db, "../sql/create_tables.sql")
         print("Created tables")
         # run_sql_file(cursor, db, "sql/sample_data.sql")
         # print("Loaded sample data")
@@ -56,7 +64,7 @@ def db_init():
         load_prod_data(cursor, db)
         print("Loaded prod data")
 
-        run_sql_file(cursor, db, "sql/auth_schema.sql")
+        run_sql_file(cursor, db, "../sql/auth_schema.sql")
 
     except Exception as e:
         print(

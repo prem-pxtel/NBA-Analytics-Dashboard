@@ -40,6 +40,7 @@ def register():
         return jsonify({"message": "User registered successfully", "role":role}), 201
     except Exception as e:
         db.rollback()
+        print("error occured on register", e)
         return jsonify({"error": str(e)}), 400
     finally:
         db.close()

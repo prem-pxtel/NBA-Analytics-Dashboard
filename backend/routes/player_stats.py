@@ -49,11 +49,12 @@ def game_stats():
 
     query = """
     SELECT 
+        pg.game_id,
         g.game_date AS date,
-    CASE
-        WHEN pg.team_id = g.home_team_id THEN away.team_name
-        ELSE home.team_name
-    END AS opponent,
+        CASE
+            WHEN pg.team_id = g.home_team_id THEN away.team_name
+            ELSE home.team_name
+        END AS opponent,
         pg.points,
         pg.assists,
         pg.rebounds,
@@ -72,7 +73,7 @@ def game_stats():
     results = cur.fetchall()
     db.close()
 
-    keys = ["date", "opponent", "points", "assists", "rebounds", "blocks"]
+    keys = ["game_id", "date", "opponent", "points", "assists", "rebounds", "blocks"]
     return jsonify([dict(zip(keys, row)) for row in results])
 
 

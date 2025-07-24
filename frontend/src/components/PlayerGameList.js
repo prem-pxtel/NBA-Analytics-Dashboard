@@ -16,6 +16,7 @@ const PlayerGameList = ({ selectedPlayer, onSelectGame }) => {
         .then(response => response.json())
         .then(data => {
           const sanitizedData = data.map(record => ({
+            game_id: record["game_id"],
             player_name: selectedPlayer,
             points: record["points"],
             assists: record["assists"],
@@ -42,6 +43,7 @@ const PlayerGameList = ({ selectedPlayer, onSelectGame }) => {
         <table className="players-table">
           <thead>
             <tr>
+              <th>Game ID</th>
               <th>Date</th>
               <th>Opponent</th>
               <th>Points</th>
@@ -57,6 +59,7 @@ const PlayerGameList = ({ selectedPlayer, onSelectGame }) => {
                 style={{ cursor: 'pointer' }}
                 onClick={() => onSelectGame?.(game.game_id)}
               >
+                <td>{game.game_id}</td>
                 <td>{game.date}</td>
                 <td>{game.opponent}</td>
                 <td>{game.points}</td>

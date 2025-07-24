@@ -15,14 +15,13 @@ def season_stats():
 
     query = """
     SELECT p.player_name,
-        s.season_id,
+        ps.season_id,
         t.team_name,
-        ps.points_per_game,
-        ps.assists_per_game,
-        ps.rebounds_per_game,
-        ps.blocks_per_game
-    FROM PlayerSeasonStats ps
-        JOIN Season s ON ps.season_id = s.season_id
+        ps.total_points,
+        ps.avg_assists,
+        ps.avg_rebounds,
+        ps.avg_blocks
+    FROM PlayerSeasonStatsMV ps
         JOIN Team t ON ps.team_id = t.team_id
         JOIN Player p ON ps.player_id = p.player_id
     WHERE p.player_name ILIKE %s;
@@ -34,8 +33,8 @@ def season_stats():
     results = cur.fetchall()
     db.close()
 
-    keys = ["player_name", "season_id", "team_name", "points_per_game",
-            "assists_per_game", "rebounds_per_game", "blocks_per_game"]
+    keys = ["player_name", "season_id", "team_name", "total_points",
+            "avg_assists", "avg_rebounds", "avg_blocks"]
     return jsonify([dict(zip(keys, row)) for row in results])
 
 

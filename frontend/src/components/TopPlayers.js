@@ -6,7 +6,14 @@ const TopPlayers = () => {
 
   const fetchTop10Data = async (stat) => {
     if (stat) {
-      fetch(`http://localhost:8000/api/player/top10?stat=${stat}`)
+      const token = localStorage.getItem('access_token');
+
+      fetch(`http://localhost:8000/api/player/top10?stat=${stat}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => response.json())
         .then(data => {
           setPlayersData(data)

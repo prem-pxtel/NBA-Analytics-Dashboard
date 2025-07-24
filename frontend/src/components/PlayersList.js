@@ -5,7 +5,14 @@ const PlayersList = ({searchTerm, handleSelectPlayer}) => {
 
     useEffect(() => {
         if (searchTerm) {
-            fetch(`http://localhost:8000/api/player/season_stats?player_name=${encodeURIComponent(searchTerm)}`)
+            const token = localStorage.getItem('access_token');
+            
+            fetch(`http://localhost:8000/api/player/season_stats?player_name=${encodeURIComponent(searchTerm)}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
         const santizedData = data.map(record => ({
@@ -20,6 +27,10 @@ const PlayersList = ({searchTerm, handleSelectPlayer}) => {
         }));
 
         setPlayersData(santizedData);
+                })
+                .catch(error => {
+                    console.error('Error fetching player data:', error);
+                    setPlayersData([]);
                 });
         } else {
             setPlayersData([]);

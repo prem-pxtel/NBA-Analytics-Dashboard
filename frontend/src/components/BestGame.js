@@ -7,7 +7,14 @@ const BestGame = ({selectedPlayer}) => {
 
   const fetchBestGameData = async (stat) => {
     if (stat && selectedPlayer) {
-        fetch(`http://localhost:8000/api/player/game_stats/by_stat?player_name=${encodeURIComponent(selectedPlayer)}&stat=${stat}`)
+      const token = localStorage.getItem('access_token');
+
+        fetch(`http://localhost:8000/api/player/game_stats/by_stat?player_name=${encodeURIComponent(selectedPlayer)}&stat=${stat}`, {
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          }
+      })
             .then(response => response.json())
             .then(data => {
     const sanitizedData = {

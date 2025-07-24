@@ -4,8 +4,15 @@ const PlayerGameList = ({selectedPlayer}) => {
   const [gameData, setGameData] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
     if (selectedPlayer) {
-        fetch(`http://localhost:8000/api/player/game_stats?player_name=${encodeURIComponent(selectedPlayer)}`)
+        fetch(`http://localhost:8000/api/player/game_stats?player_name=${encodeURIComponent(selectedPlayer)}`, {
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          }
+      })
             .then(response => response.json())
             .then(data => {
     const sanitizedData = data.map(record => ({

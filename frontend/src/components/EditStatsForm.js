@@ -1,68 +1,95 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-function EditStatsForm({ playerName, gameId, onClose }) {
-  const [form, setForm] = useState({
-    points: "",
-    assists: "",
-    rebounds: "",
-    blocks: "",
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+function EditStatsForm({ selectedPlayer }) {
+  const [gameId, setGameId] = useState('');
+  const [points, setPoints] = useState('');
+  const [assists, setAssists] = useState('');
+  const [rebounds, setRebounds] = useState('');
+  const [blocks, setBlocks] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setMessage('');
 
-    const payload = {
-      player_name: playerName,
-      game_id: gameId,
-      ...Object.fromEntries(
-        Object.entries(form).filter(([_, v]) => v !== "")
-      ),
-    };
+    try {
+      const token = localStorage.getItem('access_token');
 
-    const res = await fetch("http://localhost:8000/api/player/update_game_stats", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(payload),
-    });
+      const res = await fetch('http://localhost:8000/api/player/update_game_stats', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          player_name: selectedPlayer,
+          game_id: gameId,
+          points: points ? parseInt(points) : null,
+          assists: assists ? parseInt(assists) : null,
+          rebounds: rebounds ? parseInt(rebounds) : null,
+          blocks: blocks ? parseInt(blocks) : null,
+        }),
+      });
 
-    const data = await res.json();
-    if (res.ok) {
-      alert("Stats updated!");
-      onClose();
-    } else {
-      alert("Error: " + data.error);
+      if (!res.ok) {
+        throw new Error(`Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log('Update successful:', data);
+      setMessage('Player stats updated successfully.');
+
+    } catch (err) {
+      console.warn('User is likely not an admin or update failed silently.');
+      // You can optionally show a message to admin-only users here
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Edit Stats for {playerName}</h3>
-      <label>
-        Points:
-        <input type="number" name="points" value={form.points} onChange={handleChange} />
-      </label>
-      <label>
-        Assists:
-        <input type="number" name="assists" value={form.assists} onChange={handleChange} />
-      </label>
-      <label>
-        Rebounds:
-        <input type="number" name="rebounds" value={form.rebounds} onChange={handleChange} />
-      </label>
-      <label>
-        Blocks:
-        <input type="number" name="blocks" value={form.blocks} onChange={handleChange} />
-      </label>
-      <button type="submit">Submit</button>
-      <button type="button" onClick={onClose}>Cancel</button>
-    </form>
+    <div style={{ marginTop: '20px' }}>
+      <h2>Edit Player Stats (Admin Only)</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Game ID"
+          value={gameId}
+          onChange={(e) => setGameId(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          placeholder="Points"
+          value={points}
+          onChange={(e) => setPoints(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Assists"
+          value={assists}
+          onChange={(e) => setAssists(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Rebounds"
+          value={rebounds}
+          onChange={(e) => setRebounds(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Blocks"
+          value={blocks}
+          onChange={(e) => setBlocks(e.target.value)}
+        />
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
+        </button>
+      </form>
+      {message && <p>{message}</p>}
+    </div>
   );
 }
 

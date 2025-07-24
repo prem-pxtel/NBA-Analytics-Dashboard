@@ -34,8 +34,8 @@ def season_stats():
     print(f"Found {len(results)} rows for '{player_name}'")
     db.close()
 
-    keys = ["player_name", "season_id", "team_name", "total_points",
-            "avg_assists", "avg_rebounds", "avg_blocks"]
+    keys = ["player_name", "season_id", "team_name", "points_per_game",
+            "assists_per_game", "rebounds_per_game", "blocks_per_game"]
     return jsonify([dict(zip(keys, row)) for row in results])
 
 
@@ -101,7 +101,7 @@ def game_stats_for_date():
         JOIN Game g ON pg.game_id = g.game_id
         JOIN Team home ON g.home_team_id = home.team_id
         JOIN Team away ON g.away_team_id = away.team_id
-    WHERE p.player_name ILIKE %s AND date = %s;
+    WHERE p.player_name ILIKE %s AND g.game_date = %s;
     """
 
     db = get_db_connection()

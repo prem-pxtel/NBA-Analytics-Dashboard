@@ -27,9 +27,9 @@ function Auth({ onLogin }) {
     
       if (response.ok && responseData.access_token) {
         localStorage.setItem('access_token', responseData.access_token);
+        localStorage.setItem("role", responseData.role);
         onLogin(responseData.access_token);
       } else {
-        alert(responseData.error || "Login failed");
       }
     } catch (err) {
       alert("An error occurred, try again later");

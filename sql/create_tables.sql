@@ -121,6 +121,7 @@ CREATE TABLE PlayerStatsAudit (
 
 CREATE MATERIALIZED VIEW PlayerSeasonStatsMV AS
 SELECT
+    p.player_name,
     ps.player_id,
     ps.team_id,
     ps.season_id,
@@ -129,9 +130,9 @@ SELECT
     AVG(ps.rebounds_per_game) AS avg_rebounds,
     AVG(ps.blocks_per_game) AS avg_blocks
 FROM
-    PlayerSeasonStats ps
+    PlayerSeasonStats ps JOIN Player p ON ps.player_id = p.player_id
 GROUP BY
-    ps.player_id;
+    ps.player_id, ps.team_id, ps.season_id, p.player_id;
 
 
 DROP VIEW IF EXISTS MostRecentGame;

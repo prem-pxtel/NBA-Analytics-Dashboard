@@ -272,49 +272,57 @@ def update_game_stats():
 
     if not player_name or not game_id:
         return jsonify({"error": "Missing player_name or game_id"}), 400
-    
+
+    # List of columns that can be updated
     columns = ["points", "assists", "rebounds", "blocks", "FGA", "FGM", "FTA", "FTM"]
     update_cols = {k: v for k, v in data.items() if k in columns and v is not None}
-    if not update_cols:
-        return jsonify({"error": "No fields to update"})
 
+    if not update_cols:
+        return jsonify({"error": "No fields to update"}), 400
 
     db = get_db_connection()
-    cur = db.cursor()    
+    cur = db.cursor()
 
-    # Get player_id from player_name
-    get_player_id_query = """
-        SELECT player_id
-        FROM Player
-        WHERE player_name ILIKE %s
-    """
+    try:
+        # Step 1: Get player_id from player_name
+        get_player_id_query = """
+            SELECT player_id
+            FROM Player
+            WHERE player_name ILIKE %s
+        """
+        cur.execute(get_player_id_query, (player_name,))  
+        player = cur.fetchone()
 
-    cur.execute(get_player_id_query, (player_name))
-    player = cur.fetchone()
-    if not player:
-        return jsonify({"error": "Player not found"}), 404
-    player_id = player[0]
+        if not player:
+            db.close()
+            return jsonify({"error": "Player not found"}), 404
 
-    # Update table
-    set_clause = ""
-    values = []
-    for col, val in update_cols.items():
-        set_clause += (f"{col} = %s\n")
-        values.append(val)
+        player_id = player[0]
 
-    update_query = """
-    UPDATE PlayerGameStats
-    SET {set_clause}
-    WHERE player_id = %s AND game_id = %s;
-    """
+        # Step 2: Build the dynamic SET clause and value list
+        set_clause = ", ".join([f"{col} = %s" for col in update_cols])
+        values = list(update_cols.values()) + [player_id, game_id]
 
-    cur.execute(update_query, tuple())
-    if cur.rowcount == 0:
+        update_query = f"""
+            UPDATE PlayerGameStats
+            SET {set_clause}
+            WHERE player_id = %s AND game_id = %s;
+        """
+
+        cur.execute(update_query, tuple(values))
+
+        if cur.rowcount == 0:
+            db.rollback()
+            db.close()
             return jsonify({"error": "Player stats not found for this game"}), 404
-        
-    db.commit()
-    db.close()
 
-    return jsonify({"message": "Player game stats updated successfully"}), 200
+        db.commit()
+        db.close()
+        return jsonify({"message": "Player game stats updated successfully"}), 200
+
+    except Exception as e:
+        db.rollback()
+        db.close()
+        return jsonify({"error": str(e)}), 500
 
 

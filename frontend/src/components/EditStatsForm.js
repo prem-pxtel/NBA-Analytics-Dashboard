@@ -1,57 +1,63 @@
 import React, { useState } from 'react';
 
-function EditStatsForm({ selectedPlayer }) {
+const EditStatsForm = ({ selectedPlayer }) => {
   const [gameId, setGameId] = useState('');
-  const [points, setPoints] = useState('');
-  const [assists, setAssists] = useState('');
-  const [rebounds, setRebounds] = useState('');
-  const [blocks, setBlocks] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    points: '',
+    assists: '',
+    rebounds: '',
+    blocks: '',
+    FGA: '',
+    FGM: '',
+    FTA: '',
+    FTM: '',
+  });
   const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setMessage('');
+
+    const token = localStorage.getItem('access_token');
+    if (!token) return setMessage('User not logged in.');
+
+    const body = {
+      player_name: selectedPlayer,
+      game_id: gameId,
+      ...Object.fromEntries(
+        Object.entries(formData).filter(([_, v]) => v !== '')
+      )
+    };
 
     try {
-      const token = localStorage.getItem('access_token');
-
-      const res = await fetch('http://localhost:8000/api/player/update_game_stats', {
+      const response = await fetch('http://localhost:8000/api/player/update_game_stats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({
-          player_name: selectedPlayer,
-          game_id: gameId,
-          points: points ? parseInt(points) : null,
-          assists: assists ? parseInt(assists) : null,
-          rebounds: rebounds ? parseInt(rebounds) : null,
-          blocks: blocks ? parseInt(blocks) : null,
-        }),
+        body: JSON.stringify(body)
       });
 
-      if (!res.ok) {
-        throw new Error(`Status: ${res.status}`);
+      const result = await response.json();
+      if (response.ok) {
+        setMessage('Stats updated successfully!');
+      } else {
+        console.error(result);
+        setMessage(result.error || 'Update failed. You may not be an admin.');
       }
-
-      const data = await res.json();
-      console.log('Update successful:', data);
-      setMessage('Player stats updated successfully.');
-
     } catch (err) {
-      console.warn('User is likely not an admin or update failed silently.');
-      // You can optionally show a message to admin-only users here
-    } finally {
-      setIsSubmitting(false);
+      console.error(err);
+      setMessage('Something went wrong.');
     }
   };
 
   return (
-    <div style={{ marginTop: '20px' }}>
-      <h2>Edit Player Stats (Admin Only)</h2>
+    <div style={{ marginTop: '30px', padding: '10px', border: '1px solid #ccc', maxWidth: '400px' }}>
+      <h3>Edit Stats for: {selectedPlayer}</h3>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -60,37 +66,22 @@ function EditStatsForm({ selectedPlayer }) {
           onChange={(e) => setGameId(e.target.value)}
           required
         />
-        <input
-          type="number"
-          placeholder="Points"
-          value={points}
-          onChange={(e) => setPoints(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Assists"
-          value={assists}
-          onChange={(e) => setAssists(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Rebounds"
-          value={rebounds}
-          onChange={(e) => setRebounds(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Blocks"
-          value={blocks}
-          onChange={(e) => setBlocks(e.target.value)}
-        />
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Submit'}
-        </button>
+        {["points", "assists", "rebounds", "blocks", "FGA", "FGM", "FTA", "FTM"].map((field) => (
+          <input
+            key={field}
+            type="number"
+            name={field}
+            placeholder={field}
+            value={formData[field]}
+            onChange={handleChange}
+            style={{ display: 'block', margin: '5px 0' }}
+          />
+        ))}
+        <button type="submit">Update Stats</button>
       </form>
       {message && <p>{message}</p>}
     </div>
   );
-}
+};
 
 export default EditStatsForm;

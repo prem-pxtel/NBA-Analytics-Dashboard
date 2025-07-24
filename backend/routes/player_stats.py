@@ -15,14 +15,13 @@ def season_stats():
 
     query = """
     SELECT p.player_name,
-        s.season_id,
+        ps.season_id,
         t.team_name,
-        ps.points_per_game,
-        ps.assists_per_game,
-        ps.rebounds_per_game,
-        ps.blocks_per_game
-    FROM PlayerSeasonStats ps
-        JOIN Season s ON ps.season_id = s.season_id
+        ps.total_points,
+        ps.avg_assists,
+        ps.avg_rebounds,
+        ps.avg_blocks
+    FROM PlayerSeasonStatsMV ps
         JOIN Team t ON ps.team_id = t.team_id
         JOIN Player p ON ps.player_id = p.player_id
     WHERE p.player_name ILIKE %s;
@@ -35,8 +34,8 @@ def season_stats():
     print(f"Found {len(results)} rows for '{player_name}'")
     db.close()
 
-    keys = ["player_name", "season_id", "team_name", "points_per_game",
-            "assists_per_game", "rebounds_per_game", "blocks_per_game"]
+    keys = ["player_name", "season_id", "team_name", "total_points",
+            "avg_assists", "avg_rebounds", "avg_blocks"]
     return jsonify([dict(zip(keys, row)) for row in results])
 
 
@@ -191,6 +190,41 @@ def top_10():
     db.close()
 
     keys = ["player_name", f"total_{stat}"]
+    return jsonify([dict(zip(keys, row)) for row in results])
+
+
+# R10
+@player_stats_bp.route("/draft_by_team", methods=["GET"])
+@jwt_required()
+def draft_by_team():
+    team_name = request.args.get("team_name")
+    start_year = request.args.get("start_year")
+    end_year = request.ags.get("end_year")
+
+    if not all(team_name, start_year, end_year):
+        return jsonify({"error": "Missing parameter"}), 400
+    
+    query = """
+        SELECT 
+            p.player_name,
+            p.draft_year,
+            p.position,
+            CASE WHEN p.is_active THEN 'Yes' ELSE 'No' END AS active_status
+        FROM Player p
+                JOIN PlayerTeamHistory pt ON p.player_id = pt.player_id
+                JOIN Team t ON pt.team_id = t.team_id
+        WHERE t.team_name = %s
+            AND p.draft_year BETWEEN %s AND %s
+        ORDER BY p.draft_year;
+    """
+
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute(query, (team_name, start_year, end_year))
+    results = cur.fetchall()
+    db.close() 
+
+    keys = ["team_name", "start_year", "end_year"]
     return jsonify([dict(zip(keys, row)) for row in results])
 
 

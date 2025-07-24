@@ -119,6 +119,21 @@ CREATE TABLE PlayerStatsAudit (
 
 --- ========== VIEWS ========== 
 
+CREATE MATERIALIZED VIEW PlayerSeasonStatsMV AS
+SELECT
+    ps.player_id,
+    ps.team_id,
+    ps.season_id,
+    SUM(ps.points_per_game) AS total_points,
+    AVG(ps.assists_per_game) AS avg_assists,
+    AVG(ps.rebounds_per_game) AS avg_rebounds,
+    AVG(ps.blocks_per_game) AS avg_blocks
+FROM
+    PlayerSeasonStats ps
+GROUP BY
+    ps.player_id;
+
+
 DROP VIEW IF EXISTS MostRecentGame;
 
 CREATE VIEW MostRecentGame AS

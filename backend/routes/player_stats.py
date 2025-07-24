@@ -193,6 +193,41 @@ def top_10():
     return jsonify([dict(zip(keys, row)) for row in results])
 
 
+# R10
+@player_stats_bp.route("/draft_by_team", methods=["GET"])
+@jwt_required()
+def draft_by_team():
+    team_name = request.args.get("team_name")
+    start_year = request.args.get("start_year")
+    end_year = request.ags.get("end_year")
+
+    if not all(team_name, start_year, end_year):
+        return jsonify({"error": "Missing parameter"}), 400
+    
+    query = """
+        SELECT 
+            p.player_name,
+            p.draft_year,
+            p.position,
+            CASE WHEN p.is_active THEN 'Yes' ELSE 'No' END AS active_status
+        FROM Player p
+                JOIN PlayerTeamHistory pt ON p.player_id = pt.player_id
+                JOIN Team t ON pt.team_id = t.team_id
+        WHERE t.team_name = %s
+            AND p.draft_year BETWEEN %s AND %s
+        ORDER BY p.draft_year;
+    """
+
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute(query, (team_name, start_year, end_year))
+    results = cur.fetchall()
+    db.close() 
+
+    keys = ["team_name", "start_year", "end_year"]
+    return jsonify([dict(zip(keys, row)) for row in results])
+
+
 # advanced feature 2 - most recent game for a player
 @player_stats_bp.route("/recent_game_stats", methods=["GET"])
 @jwt_required()

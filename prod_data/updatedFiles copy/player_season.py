@@ -3,7 +3,7 @@ import time
 from nba_api.stats.endpoints import playercareerstats
 from nba_api.stats.static import players
 
-def fetch_player_season_stats_avg(filename="player_season_stats.csv"):
+def fetch_player_season_stats_avg(filename="../data/player_season_stats.csv"):
     all_players = players.get_active_players()
 
     with open(filename, mode='w', newline='', encoding='utf-8') as file:

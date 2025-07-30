@@ -51,9 +51,8 @@ const EditStatsForm = ({ selectedPlayer }) => {
         setMessage(result.error || 'Update failed. You may not be an admin.');
       }
     } catch (err) {
-      console.warn('User is likely not an admin or update failed silently.');
-    } finally {
-      setIsSubmitting(false);
+      console.error(err);
+      setMessage('Something went wrong.');
     }
   };
 

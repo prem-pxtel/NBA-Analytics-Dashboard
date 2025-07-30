@@ -77,6 +77,10 @@ def game_stats():
     db.close()
 
     keys = ["game_id", "date", "opponent", "points", "assists", "rebounds", "blocks"]
+<<<<<<< Updated upstream
+=======
+    print(results, " is getting returned")
+>>>>>>> Stashed changes
     return jsonify([dict(zip(keys, row)) for row in results])
 
 

@@ -33,7 +33,7 @@ function Auth({ onLogin }) {
       }
     } catch (err) {
       alert("An error occurred, try again later");
-      console.log(err);
+      console.log("error occured", err);
     }    
   };
 

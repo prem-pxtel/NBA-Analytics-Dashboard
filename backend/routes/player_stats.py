@@ -24,8 +24,11 @@ def season_stats():
     FROM PlayerSeasonStatsMV ps
         JOIN Team t ON ps.team_id = t.team_id
         JOIN Player p ON ps.player_id = p.player_id
-    WHERE p.player_name ILIKE %s;
+    WHERE p.player_name ILIKE %s
+    ORDER BY ps.season_id DESC;
     """
+
+    print("ok lets go with query")
 
     db = get_db_connection()
     cur = db.cursor()
@@ -74,6 +77,10 @@ def game_stats():
     db.close()
 
     keys = ["game_id", "date", "opponent", "points", "assists", "rebounds", "blocks"]
+<<<<<<< Updated upstream
+=======
+    print(results, " is getting returned")
+>>>>>>> Stashed changes
     return jsonify([dict(zip(keys, row)) for row in results])
 
 

@@ -56,7 +56,7 @@ def login():
         return jsonify({"error": "Missing username or password"}), 400
     
     query = """
-        SELECT user_id, pwd_hash
+        SELECT user_id, pwd_hash, user_role
         FROM Users
         WHERE username = %s;
     """
@@ -68,12 +68,12 @@ def login():
     db.close()
 
     if user:
-        user_id, pwd_hash = user
+        user_id, pwd_hash, user_role = user
         if current_app.bcrypt.check_password_hash(pwd_hash, pwd_raw):
             access_token = create_access_token(identity=str(user_id))
             print("--- Login successful ---")
-            print(jsonify(access_token=access_token))
-            return jsonify(access_token=access_token), 200
+            print(jsonify(access_token=access_token, role=user_role))
+            return jsonify(access_token=access_token, role=user_role), 200
         else:
             return jsonify({"error": "Wrong password"}), 401
     return jsonify({"error": "No such user found"}), 401

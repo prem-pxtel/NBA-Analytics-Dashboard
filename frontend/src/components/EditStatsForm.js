@@ -32,6 +32,7 @@ const EditStatsForm = ({ selectedPlayer }) => {
       )
     };
 
+
     try {
       const response = await fetch('http://localhost:8000/api/player/update_game_stats', {
         method: 'POST',

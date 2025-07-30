@@ -1,7 +1,7 @@
 import pandas as pd
 from nba_api.stats.endpoints import leaguegamefinder
 
-def fetch_game_csv(season="2024-25", season_type="Regular Season", output_file="data/games.csv", team_file="data/teams.csv"):
+def fetch_game_csv(season="2024-25", season_type="Regular Season", output_file="../data/games.csv", team_file="../data/teams.csv"):
     print("Fetching NBA games...")
 
     # Load valid team IDs
@@ -18,6 +18,7 @@ def fetch_game_csv(season="2024-25", season_type="Regular Season", output_file="
     games_df = games_df[keep_cols]
 
     # Convert GAME_ID to int (removes leading zeros)
+    games_df = games_df[games_df["GAME_ID"].notnull()]
     games_df["GAME_ID"] = games_df["GAME_ID"].astype(int)
 
     # Separate home and away teams using MATCHUP column

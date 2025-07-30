@@ -1,7 +1,7 @@
 import csv
 from nba_api.stats.static import teams
 
-def fetch_teams_to_csv(filename="teams.csv"):
+def fetch_teams_to_csv(filename="../data/teams.csv"):
     all_teams = teams.get_teams()
 
     with open(filename, mode='w', newline='', encoding='utf-8') as file:

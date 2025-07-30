@@ -90,7 +90,7 @@ const DraftByTeam = () => {
           </tbody>
         </table>
       ) : (
-        !error && <p>No players found for given input.</p>
+        !error && <p>Try searching something</p>
       )}
     </div>
   );

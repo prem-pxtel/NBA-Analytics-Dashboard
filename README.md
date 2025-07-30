@@ -37,7 +37,7 @@ npm start
 cd backend/
 python3 main.py
 ```
-We can stop here, and start using the application now! If a manual data update is desired first, we can proceed with step 4 below.
+We can start using the application now, using NBA production data! If a manual data update is desired, we can proceed with step 4 below.
 
 ## 4. Populating the Production Database
 We use the following API package as the source of our production data: https://github.com/swar/nba_api

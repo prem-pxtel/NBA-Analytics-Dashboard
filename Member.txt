@@ -1,0 +1,19 @@
+## R16: Members
+
+**Sailesh**
+- Worked on the FE implementation for **R11** (sign-up and log-in workflow) and **R12** (component for showing the most recent game).
+- Demoed the implementation for the presentation.
+- Helped debug errors in the backend.
+
+**Piratheepan**
+- Worked on the FE implementations for **R10** and **R13**.
+- Assisted in debugging backend errors.
+
+**Anna**
+- Implemented advanced features on the backend.
+- Presented backend queries during the demo.
+
+**Prem**
+- Wrote feature write-ups for core features **R6-R10** and advanced features **R11-R15**.
+- Created and tested sample data.
+- Developed and assembled report sections for all milestones.

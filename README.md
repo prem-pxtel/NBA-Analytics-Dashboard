@@ -42,14 +42,17 @@ python3 main.py
 We use the following API package as the source of our production data: https://github.com/swar/nba_api
 
 We use this package to scrape the raw data, using python scripts developed in this milestone:
-- extract_nba_data_p1.py
-- extract_nba_data_p2.py
-- player_team.py
+- get_seasons.py
+- get_teams.py
+- get_games.py
+- active_players.py
 - boxscores.py
+- player_season.py
+- player_team.py
 
 These should be run once, in the order as shown above (if the data has not already been generated), with some time in between to prevent rate limiting. 
 
-Once the data is generated, all we need to do is run create_tables.sql followed by load_csv.sql. This will get the production data populated into our database.
+Once the data is generated, all we need to do is run create_tables.sql followed by load_csv.sql. This will get the production data populated into our database, in case a refresh is necessary. 
 
 
 

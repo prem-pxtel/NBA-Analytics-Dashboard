@@ -51,20 +51,5 @@ These should be run once, in the order as shown above (if the data has not alrea
 
 Once the data is generated, all we need to do is run create_tables.sql followed by load_csv.sql. This will get the production data populated into our database.
 
-Currently in our frontend, we are creating tables and loading in sample data as shown below.
-
-```sql
- # In main.py...
- # ...
- try:
-	 run_sql_file(cursor, db, "sql/create_tables.sql")
-	 print("Created tables")
-	 run_sql_file(cursor, db, "sql/sample_data.sql")
-	 print("Loaded sample data")
- # ...
-```
-
-Currently, we are using the sample dataset for comparison with expected output in our report. However, to use the production data instead, we need to simply run load_csv.sql here.
-
 
 

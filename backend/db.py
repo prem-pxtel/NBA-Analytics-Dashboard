@@ -33,10 +33,18 @@ def load_query(path: str):
     return [q.strip() for q in sql.split(';') if q.strip()]
 
 
-def load_csv(cursor, db, table, csv_path):
-    with open(csv_path, 'r') as f:
-        cursor.copy_expert(f"COPY {table} FROM STDIN WITH CSV HEADER", f)
-    db.commit()
+def load_csv(cursor, db, table, csv_path, encoding='UTF8', delimiter=','):
+    try:
+        with open(csv_path, 'r', encoding=encoding) as f:
+            cursor.copy_expert(
+                f"COPY {table} FROM STDIN WITH CSV HEADER DELIMITER '{delimiter}'",
+                f
+            )
+        db.commit()
+        print(f"Data from {csv_path} loaded into {table} successfully.")
+    except Exception as e:
+        db.rollback()  # Rollback the transaction if something goes wrong
+        print(f"Error loading data: {e}")
 
 
 def load_prod_data(cursor, db):

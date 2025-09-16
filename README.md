@@ -1,4 +1,4 @@
-# CS348 Group Project – NBA Dashboard
+# NBA Dashboard Application
 
 ## 1. Project Overview
 

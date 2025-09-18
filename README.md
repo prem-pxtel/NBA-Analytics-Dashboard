@@ -1,4 +1,4 @@
-# NBA Dashboard Application
+# NBA Analytics Dashboard
 
 ## 1. Project Overview
 

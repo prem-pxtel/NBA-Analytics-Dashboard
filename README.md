@@ -2,8 +2,7 @@
 
 ## 1. Project Overview
 
-This project is an NBA dashboard web application that allows users to view player and team statistics.  
-For this milestone, we are using a simple dataset to demonstrate database setup and a basic query.
+This is a full-stack web application dashboard that allows users to view NBA player and team statistics.  
 
 ---
 

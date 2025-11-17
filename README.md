@@ -2,7 +2,10 @@
 
 ## 1. Project Overview
 
-This is a full-stack web application dashboard that allows users to view NBA player and team statistics.  
+This is a full-stack web application dashboard that allows users to view NBA player and team statistics.
+See below for a E/R diagram showing our relational schema.
+<img width="1012" height="824" alt="image" src="https://github.com/user-attachments/assets/2be60c36-e348-49d5-9034-e2769069ed58" />
+
 
 ---
 

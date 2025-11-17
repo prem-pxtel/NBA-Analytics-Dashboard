@@ -3,8 +3,16 @@
 ## 1. Project Overview
 
 This is a full-stack web application dashboard that allows users to view NBA player and team statistics.
-See below for a E/R diagram showing our relational schema.
+
+Homepage:
+<img width="1895" height="884" alt="image" src="https://github.com/user-attachments/assets/34814249-c2a1-4200-abe1-aa0f444091d1" />
+
+E/R diagram showing the core relational schema:
 <img width="1012" height="824" alt="image" src="https://github.com/user-attachments/assets/2be60c36-e348-49d5-9034-e2769069ed58" />
+<img width="359" height="246" alt="image" src="https://github.com/user-attachments/assets/831f55c7-2b7d-49d7-8301-3ffe56864383" />
+
+Sign up screen:
+<img width="550" height="310" alt="image" src="https://github.com/user-attachments/assets/1d796943-5846-4886-910f-a10736e3dfc3" />
 
 
 ---
